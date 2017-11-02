@@ -8,36 +8,157 @@
 
 </head>
 <body>
+    <script src="./bootstrap 4.6/js/jquery-1.11.1.min.js"></script>
+    <script src="./bootstrap 4.6/js/tether.min.js"></script>
+    <script src="./bootstrap 4.6/js/bootstrap.min.js"></script>
+    <script src="./MScripts/index.js"></script>
     <header>
         <nav class="navbar navbar-toggleable-md navbar-light bg-faded header_container__navbar_block" id="nav">
             <div class="container">
-           
-                    <div class="navbar-brand navbar_block__logo_container">
-                        <div class="d-flex flex-row">
-                            <!--<div class="p-0"> <a href="./index.html"><img class="logo_container__logo" src="./images/*.jpg" /></a></div>-->
-                            <div class="p-0">
-                                <p class="logo_container__text_up"> Заголовок</p>
-                                <p class="logo_container__text_down">Online</p>
-                            </div>
+
+                <div class="navbar-brand navbar_block__logo_container">
+                    <div class="d-flex flex-row">
+                        <!--<div class="p-0"> <a href="./index.html"><img class="logo_container__logo" src="./images/*.jpg" /></a></div>-->
+                        <div class="p-0">
+                            <p class="logo_container__text_up"> Заголовок</p>
+                            <p class="logo_container__text_down">Online</p>
                         </div>
                     </div>
+                </div>
                 <div class="form-inline navbar-right" style="font-weight: 600; font-size: 1.05rem">
                     <a class="nav-link" id="no-input-user" href="#">
                         <span aria-hidden="true">Войти</span>
                     </a>
                 </div>
-            
+
             </div>
         </nav>
     </header>
     <main>
         <div class="container body_container" role="main">
             <div class="row border_row">
+                <div class="col-7 p-2">
+                    <div class="d-flex justify-content-center">
+                        <canvas style="outline: 1px solid #000;"></canvas>
+                    </div>
+                </div>
+                <div class="col-5 p-2">
+                    <div class="d-flex justify-content-center">
+
+                        <div class="tab-tools">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="base-tools-tab" data-toggle="tab" href="#base-tools-cont" role="tab" aria-controls="home" aria-selected="true">Игровые настройки</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="color-tools-tab" data-toggle="tab" href="#color-tools-cont" role="tab" aria-controls="profile" aria-selected="false">Оформление</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" style="margin-top:1rem">
+                                <div class="tab-pane fade show active" id="base-tools-cont" role="tabpanel" aria-labelledby="base-tools-tab">
+                                    <form id="baseForm">
+                                        <div class="d-flex flex-column">
+                                            <div class="p-1">
+                                                <div class="row">
+                                                    <label class="col-3 col-form-label">Ширина</label>
+                                                    <div class="col-3">
+                                                        <input class="form-control" name="width" type="text" value="5">
+                                                    </div>
+                                                    <label class="col-2 col-form-label">Высота</label>
+                                                    <div class="col-3">
+                                                        <input class="form-control" name="height" type="text" value="5">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="p-1">
+                                                <div class="row">
+                                                    <label class="col-3 col-form-label">Мины</label>
+                                                    <div class="col-3">
+                                                        <input class="form-control" name="mine" type="text" value="1">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="p-1">
+                                                <div class="d-flex flex-row justify-content-center">
+                                                    <div class="p-1">
+                                                        <button type="button" class="btn btn-outline-primary">Начать игру</button>
+                                                    </div>
+                                                    <div class="p-1">
+                                                        <button type="button" class="btn btn-outline-primary">Загрузить игру</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </form>
+
+
+</div>
+                                <div class="tab-pane fade" id="color-tools-cont" role="tabpanel" aria-labelledby="color-tools-tab">
+                                    <forms class="color-tools-form">
+                                        <div class="d-flex flex-column">
+                                            <div class="p-0">
+                                                <div class="row">
+                                                    <label for="example-color-input" class="col-5 col-form-label">Цвет рамки</label>
+                                                    <div class="col-7">
+                                                        <input type="color" class="inputs-color" value="#ff0000">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="p-0">
+                                                <div class="row">
+                                                    <label for="example-color-input" class="col-5 col-form-label">Цвет фона</label>
+                                                    <div class="col-7">
+                                                        <input type="color" class="inputs-color" value="#ff0000">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="p-0">
+                                                <div class="row">
+                                                    <label for="example-color-input" class="col-5 col-form-label">Цвет клеток</label>
+                                                    <div class="col-7">
+                                                        <input type="color" class="inputs-color" value="#0000ff">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="p-0">
+                                                <div class="row">
+                                                    <label for="example-color-input" class="col-5 col-form-label">Цвет мин</label>
+                                                    <div class="col-7">
+                                                        <input type="color" class="inputs-color" value="#00ff00">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="p-0">
+                                                <div class="row">
+                                                    <label for="example-color-input" class="col-5 col-form-label">Цвет меток</label>
+                                                    <div class="col-7">
+                                                        <input type="color" class="inputs-color" value="#00ff00">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="p-1">
+                                                <div class="d-flex flex-row justify-content-center">
+                                                    <div class="p-1">
+                                                        <button type="button" class="btn btn-outline-primary">Применить</button>
+                                                    </div>
+                                                    <div class="p-1">
+                                                        <button type="button" class="btn btn-outline-primary">Загрузить</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </forms>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
             </div>
-            <div class="row border_row">
-    
-            </div>
-            <div class="row" style="height: 2rem"></div>
+            <!--<div class="row border_row"></div>
+            <div class="row" style="height: 2rem"></div>-->
         </div>
     </main>
 

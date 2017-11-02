@@ -157,3 +157,18 @@ main {
     margin: 0.5rem;
     height: 400px
 }
+
+.inputs-color {
+    display: block;
+    width: 50%;
+    /*padding: .5rem .75rem;*/
+    margin-top:.5rem;
+    font-size: 1rem;
+    line-height: 1.25;
+    background-color: #fff;
+    background-image: none;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: .25rem;
+}
