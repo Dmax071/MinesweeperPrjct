@@ -72,20 +72,20 @@ nav.header_container__navbar_block {
 
 @media (min-width: 768px) {
     .navbar-right {
-        margin-left: 40rem;
+        margin-left: 39rem;
         margin-top: -4rem;
     }
 }
 @media (min-width: 992px) {
     .navbar-right {
-        margin-left: 45rem;
+        margin-left: 40rem;
         margin-top: 0px;
     }
 }
 
 @media (min-width: 1200px) {
     .navbar-right {
-        margin-left: 59rem;
+        margin-left: 55rem;
         margin-top: 0px;
     }
 }

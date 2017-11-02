@@ -3,7 +3,10 @@
     $('input').on('change keyup paste', function () {
         alert($('#baseForm').serialize());
     });
+
 })
+
+
 
 //получить данные с формы
 function getFormParamToObj(formcaption) {
@@ -29,6 +32,12 @@ function setParamToGameArea() {
 
     canvas.width = obj.width * cellWidth;
     canvas.height = obj.height * cellHeight
+}
+
+
+var gameArea = function () {
+
+
 }
 
 
@@ -59,8 +68,18 @@ function init() {
                     fill: function (solid) {
                         // запоминаем состояние закрашенности клетки
                         this.solid = solid
-                        context.fillStyle = solid ? '#ddd' : '#fff';
+                        //context.fillStyle = solid ? '#ddd' : '#fff';
+                        //context.fillRect(this.top, this.left, cellWidth, cellHeight);
+                        if (!solid) {
+                            var img = new Image();
+                            img.src = './images/mine.png';
+                            context.drawImage(img, this.top, this.left, cellWidth, cellHeight);
+                        }
+                        else {
+                            context.fillStyle = solid ? '#ddd' : '#fff';
                         context.fillRect(this.top, this.left, cellWidth, cellHeight);
+                        }
+
                     },
                     drawBorder: function () {
                         context.beginPath();
