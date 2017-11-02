@@ -1,0 +1,159 @@
+﻿.header_node_block__note {
+    color: #fff;
+    line-height: 1.5rem;
+    font-weight: 300;
+    font-size: 1rem;
+}
+
+.navbar_block__button {
+    margin-top: 1rem;
+}
+
+header {
+    background: #004c8f;
+    align-items: center;
+}
+
+nav.header_container__navbar_block {
+    background: #fff;
+    height: 120px;
+    border-bottom: 1px solid #dadada;
+    text-align: center;
+    box-shadow: 0 4px 3px rgba(0,33,59,.1);
+}
+
+    nav.header_container__navbar_block.stickytop {
+        z-index: 999;
+        position: fixed;
+        height: 120px;
+        top: 0;
+        width: 100%;
+    }
+
+.logo_container__text_up {
+    margin-top: .25rem;
+    text-indent: 1.2rem;
+    letter-spacing: -.05rem;
+    color: #000;
+    font-weight: 500;
+    font-size: 1.65rem;
+    margin-bottom: -.5rem;
+    margin-top: .5rem;
+}
+
+.logo_container__text_down {
+    text-indent: 1.2rem;
+    letter-spacing: -.01rem;
+    font-size: 1.25rem;
+    color: #646464;
+}
+
+.logo_container__logo {
+    height: 80px;
+}
+
+.navbar_block__collapse_menu {
+    margin-left: 3.6rem;
+    line-height: 1.5;
+    color: #323232;
+    font-size: 1.25rem;
+}
+
+
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
+    color: #004c8f;
+}
+
+/*/////костыль для кнопки войти*/
+.navbar-right {
+    margin-left: 29rem;
+    margin-top: -4rem;
+}
+
+@media (min-width: 768px) {
+    .navbar-right {
+        margin-left: 40rem;
+        margin-top: -4rem;
+    }
+}
+@media (min-width: 992px) {
+    .navbar-right {
+        margin-left: 45rem;
+        margin-top: 0px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .navbar-right {
+        margin-left: 59rem;
+        margin-top: 0px;
+    }
+}
+
+
+    /*footer*/
+    .footer_nav {
+        background-color: #183650;
+    }
+
+    .footer_nav__copyRight {
+        color: #FFF;
+        height: 5rem;
+    }
+footer {
+    background-color: #183650;
+    margin-top: 2rem
+}
+
+.footer_container {
+    margin-top: 2rem;
+}
+
+.footer_column {
+    text-align: left;
+}
+
+.footer_link {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+    .footer_link:hover {
+        color: #dbdbdb;
+        text-decoration: none;
+    }
+
+div.footer_link {
+    font-size: .75rem;
+}
+
+
+html, body {
+    height: 84.65%;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    min-height: 100%;
+}
+
+.footer_content {
+    height: 50px;
+}
+    /*body*/
+
+    /*.body_container {
+        margin-top: 1rem;
+    }*/
+
+.border_block {
+  border:1px solid #ddd;
+  margin:0.5rem;
+}
+
+.border_row {
+    border: 1px solid #ddd;
+    margin: 0.5rem;
+    height: 400px
+}
