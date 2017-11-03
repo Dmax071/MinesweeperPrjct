@@ -45,13 +45,13 @@
                                     <img class="img-fluid " src="./images/clock.png" style="width:2.5rem">
                                 </div>
                                 <div class="col-3">
-                                    <input class="form-control" name="width" type="text" value="5">
+                                    <p class="form-control" id="timer">0.000</p>
                                 </div>
                                 <div class="p-1">
                                     <img class="img-fluid " src="./images/mine.png" style="width:4rem">
                                 </div>
                                 <div class="col-2">
-                                    <input class="form-control" name="height" type="text" value="5">
+                                    <input class="form-control" name="height" type="text" value="0">
                                 </div>
                             </div>
                         </div>
@@ -75,50 +75,85 @@
                             <div class="tab-content" style="margin-top:1rem">
                                 <div class="tab-pane fade show active" id="base-tools-cont" role="tabpanel" aria-labelledby="base-tools-tab">
                                     <form id="baseForm">
-                                        <div class="d-flex flex-column">
-                                            <div class="p-1">
-                                                <div class="row">
-                                                    <label class="col-3 col-form-label">Ширина</label>
-                                                    <div class="col-3">
-                                                        <input class="form-control" name="width" type="text" value="5">
-                                                    </div>
-                                                    <label class="col-2 col-form-label">Высота</label>
-                                                    <div class="col-3">
-                                                        <input class="form-control" name="height" type="text" value="5">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="p-1">
-                                                <div class="row">
-                                                    <label class="col-3 col-form-label">Мины</label>
-                                                    <div class="col-3">
-                                                        <input class="form-control" name="mine" type="text" value="1">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="p-1">
-                                                <div class="d-flex flex-row justify-content-center">
-                                                    <div class="p-1">
-                                                        <button type="button" class="btn btn-outline-primary">Начать игру</button>
-                                                    </div>
-                                                    <div class="p-1">
-                                                        <button type="button" class="btn btn-outline-primary">Загрузить игру</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        </form>
 
+                                        <fieldset class="form-group">
+                                            <!--<legend>Уровень игры</legend>-->
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="level" id="level_easy" value="0" checked>
+                                                    Новичок поле 9х9 ячеек 10мин
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="level" id="level_middle" value="1">
+                                                    Любитель поле 16х16 ячеек 40 мин
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="level" id="level_hard" value="2">
+                                                    Профи поле 16х30 ячеек 99мин
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="level" id="level_custom" value="3">
+                                                    Особый
+                                                </label>
+                                                <div class="d-flex flex-column">
+                                                    <div class="p-1">
+                                                        <div class="row">
+                                                            <label class="col-5 col-form-label">Высота (9-30)</label>
+                                                            <div class="col-3">
+                                                                <input class="form-control" name="q_height" type="text" value="5">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-1">
+                                                        <div class="row">
+                                                            <label class="col-5 col-form-label">Ширина (9-30) </label>
+                                                            <div class="col-3">
+                                                                <input class="form-control" name="q_width" type="text" value="9">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-1">
+                                                        <div class="row">
+                                                            <label class="col-5 col-form-label">Мины (10-668)</label>
+                                                            <div class="col-3">
+                                                                <input class="form-control" name="q_mine" type="text" value="1">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-1">
+                                                        <div class="d-flex flex-row justify-content-center">
+                                                            <div class="p-1">
+                                                                <button type="button" class="btn btn-outline-primary">Начать игру</button>
+                                                            </div>
+                                                            <div class="p-1">
+                                                                <button type="button" class="btn btn-outline-primary">Загрузить игру</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
 
-</div>
+                                </div>
                                 <div class="tab-pane fade" id="color-tools-cont" role="tabpanel" aria-labelledby="color-tools-tab">
-                                    <forms class="color-tools-form">
+
+                                    <div class="form-group">
+                                        <label for="header">Заголовок:</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <forms id="1">
                                         <div class="d-flex flex-column">
                                             <div class="p-0">
                                                 <div class="row">
                                                     <label for="example-color-input" class="col-5 col-form-label">Цвет рамки</label>
                                                     <div class="col-7">
-                                                        <input type="color" class="inputs-color" value="#ff0000">
+                                                        <input type="color" name="borderColor" class="inputs-color" value="#ff0000">
                                                     </div>
                                                 </div>
                                             </div>
@@ -126,7 +161,7 @@
                                                 <div class="row">
                                                     <label for="example-color-input" class="col-5 col-form-label">Цвет фона</label>
                                                     <div class="col-7">
-                                                        <input type="color" class="inputs-color" value="#ff0000">
+                                                        <input type="color" name="background" class="inputs-color" value="#ff0000">
                                                     </div>
                                                 </div>
                                             </div>
@@ -134,23 +169,7 @@
                                                 <div class="row">
                                                     <label for="example-color-input" class="col-5 col-form-label">Цвет клеток</label>
                                                     <div class="col-7">
-                                                        <input type="color" class="inputs-color" value="#0000ff">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="p-0">
-                                                <div class="row">
-                                                    <label for="example-color-input" class="col-5 col-form-label">Цвет мин</label>
-                                                    <div class="col-7">
-                                                        <input type="color" class="inputs-color" value="#00ff00">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="p-0">
-                                                <div class="row">
-                                                    <label for="example-color-input" class="col-5 col-form-label">Цвет меток</label>
-                                                    <div class="col-7">
-                                                        <input type="color" class="inputs-color" value="#00ff00">
+                                                        <input type="color" name="cellColor" class="inputs-color" value="#0000ff">
                                                     </div>
                                                 </div>
                                             </div>
@@ -182,7 +201,7 @@
 
     <footer class="footer">
         <div class="d-flex justify-content-center align-items-center footer_nav__copyRight">
-            <div class="p-1 footer_link">© ООО СоцИнформТех 2004-2017</div>
+            <div class="p-1">Сапер онлайн</div>
         </div>
     </footer>
 
