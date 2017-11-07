@@ -66,40 +66,47 @@ nav.header_container__navbar_block {
 
 /*/////костыль для кнопки войти*/
 .navbar-right {
-    margin-left: 29rem;
+    margin-left: 26rem;
     margin-top: -4rem;
 }
 
 @media (min-width: 768px) {
     .navbar-right {
-        margin-left: 39rem;
+        margin-left: 37rem;
         margin-top: -4rem;
     }
 }
+
 @media (min-width: 992px) {
     .navbar-right {
-        margin-left: 40rem;
+        margin-left: 37rem;
         margin-top: 0px;
     }
 }
 
 @media (min-width: 1200px) {
     .navbar-right {
-        margin-left: 55rem;
+        margin-left: 52rem;
         margin-top: 0px;
     }
 }
 
+.header-login {
+margin-left:.5rem
+}
+.btn-secondary {
+    border-color: #fff
+}
+/*footer*/
+.footer_nav {
+    background-color: #183650;
+}
 
-    /*footer*/
-    .footer_nav {
-        background-color: #183650;
-    }
+.footer_nav__copyRight {
+    color: #FFF;
+    height: 5rem;
+}
 
-    .footer_nav__copyRight {
-        color: #FFF;
-        height: 5rem;
-    }
 footer {
     background-color: #183650;
     margin-top: 2rem
@@ -141,15 +148,15 @@ main {
 .footer_content {
     height: 50px;
 }
-    /*body*/
+/*body*/
 
-    /*.body_container {
+/*.body_container {
         margin-top: 1rem;
     }*/
 
 .border_block {
-  border:1px solid #ddd;
-  margin:0.5rem;
+    border: 1px solid #ddd;
+    margin: 0.5rem;
 }
 
 .border_row {
@@ -162,7 +169,7 @@ main {
     display: block;
     width: 50%;
     /*padding: .5rem .75rem;*/
-    margin-top:.5rem;
+    margin-top: .5rem;
     font-size: 1rem;
     line-height: 1.25;
     background-color: #fff;
@@ -171,4 +178,9 @@ main {
     background-clip: padding-box;
     border: 1px solid rgba(0,0,0,.15);
     border-radius: .25rem;
+}
+
+.cancellaction-button {
+    margin-left: 1rem;
+    margin-top: -0.5rem;
 }
