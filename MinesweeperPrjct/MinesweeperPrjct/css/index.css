@@ -162,7 +162,6 @@ main {
 .border_row {
     border: 1px solid #ddd;
     margin: 0.5rem;
-    height: 400px
 }
 
 .inputs-color {
@@ -183,4 +182,8 @@ main {
 .cancellaction-button {
     margin-left: 1rem;
     margin-top: -0.5rem;
+}
+
+th, td {
+    text-align:center;
 }

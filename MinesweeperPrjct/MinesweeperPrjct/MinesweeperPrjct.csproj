@@ -225,6 +225,7 @@
     <Folder Include="bootstrap 4.6\" />
     <Folder Include="Content\" />
     <Folder Include="images\" />
+    <Folder Include="Plugins\Timer\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

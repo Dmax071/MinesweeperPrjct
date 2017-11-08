@@ -1,45 +1,6 @@
 ﻿$(document).ready(function () {
     $("body").on("contextmenu", false);
 
-    $('.log_in_button').on('click', function (e) {
-        var login = $("input[name = login]").val();
-        var pasw = $("input[name = password]").val();
-        var re = /[,.!?;:'"()]/;//не знаю что ограничивать, думаю только знаки препинания кроме тире и слеша
-        if (!re.test(pasw) && !re.test(login)) {
-            //все прошло
-            var sendJSON = {
-                login: login,
-                password : pasw
-            }
-
-            //localStorage.setItem('UserInfo', JSON.stringify(data));
-            //var userObj = JSON.parse(localStorage.getItem('UserInfo'));
-            //localStorage.removeItem('UserInfo');
-
-            $.ajax({
-                type: "Post",
-                url: "./Data.asmx/setPlayerInGame",
-                data: "{inputsParam:'" + JSON.stringify(sendJSON) + "'}",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    let resp = JSON.parse(data.d)
-                    alert(resp)
-                },
-                error: function (response) {
-                    alert('Error to sent data :(');
-                }
-            }
-            );
-        }
-        else
-            alert('Введены не допустимые символы!')
-    })
-
-    $('.cancel_log_in_button').on('click', function (e) {
-        alert('cacel');
-    })
-
     // проверка символов
     $("input[name^='q']").on('keypress', function (e) {
         e = e || event;
@@ -103,15 +64,131 @@
     //var game = new Game();
     //game.initGame(canvas, context);
 
+    var user = new UserData();
+    user.startUserData();
+
+    $('.log_in_button').on('click', function (e) { })
+    $('#input-user').on('click', function (e) {
+        user.LogOut();
+    })
+    $('.log_in_button').on('click', function (e) {
+        user.LogIn();
+    })
+    $('.cancel_log_in_button').on('click', function (e) {
+        user.clearFields();
+    })
+
     var colorTheme = new ColorTheme();
     colorTheme.setStartTheme();
     $('.set_default_color_btn').on('click', function (e) {
         colorTheme.setDefaultTheme();
-    })
+    });
     $('.set_color_btn').on('click', function (e) {
         colorTheme.setCustomTheme();
+    });
+
+    $('.rezult_in_button').on('click', function (e) {
+        var canvasObj = CanvasClearObject.getCanvasObj();
+        var game = new Game();
+        game.initGame(canvasObj.canvas, canvasObj.context);
     })
 })
+
+
+var timer;
+function start_timer() {
+    if (timer) clearInterval(timer);
+    secs = 0;
+   $('#timer').text(secs);
+    timer = setInterval(
+        function () {
+            secs++;
+            $('#timer').text(secs);
+        },
+        1000
+    );
+}
+
+function stop_timer() {
+    if (timer) clearInterval(timer);
+}
+
+
+var UserData = function () {
+
+    this.startUserData = function () {
+        var _userData = JSON.parse(localStorage.getItem('UserInfo'));
+        if (!_userData)
+            $('#modal_login').modal('show');
+        else
+            setValueToForm();
+    }
+
+    this.LogIn = function () {
+        var login = $("input[name = login]").val();
+        var pasw = $("input[name = password]").val();
+        var re = /[,.!?;:'"()]/;
+        if (!re.test(pasw) && !re.test(login) && login != '' && pasw != '') {
+            var sendJSON = {
+                login: login,
+                password: pasw
+            }
+            $.ajax({
+                type: "Post",
+                url: "./Data.asmx/setPlayerInGame",
+                data: "{inputsParam:'" + JSON.stringify(sendJSON) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    let resp = JSON.parse(data.d)
+                    if (resp.HasError) {
+                        alert('Пользователь под таким логином уже зарегистрирован');
+                    }
+                    else {
+                        localStorage.setItem('UserInfo', JSON.stringify(sendJSON));
+                        setValueToForm();
+                    }
+                },
+                error: function (response) {
+                    alert('Ошибка сервера :(');
+                }
+            });
+
+       }
+        else {
+            alert('Введены не допустимые символы!');
+       }
+    }
+
+    this.LogOut = function () {
+        localStorage.removeItem('UserInfo');
+        setValueToForm();
+    }
+
+    this.clearFields = function () {
+        $("input[name = login]").val('');
+        $("input[name = password]").val('');
+    }
+
+    setValueToForm = function () {
+        var _userData = JSON.parse(localStorage.getItem('UserInfo'));
+        if (!_userData) {
+            $('#no-input-user').show();
+            $('#input-user').hide();
+            this.clearFields();
+        }
+        else {
+            $('#login').text(_userData.login);
+            $('#no-input-user').hide();
+            $('#input-user').show();
+
+        }
+    }
+
+
+
+}
+
 
 //параметры цветовыъ схем
 var ColorTheme = function () {
@@ -127,7 +204,7 @@ var ColorTheme = function () {
             }
             localStorage.setItem('ColorTheme', JSON.stringify(ColorTheme));
         }
-            return ColorTheme
+        return ColorTheme
     }
 
     setValue = function (ColorTheme) {
@@ -136,6 +213,7 @@ var ColorTheme = function () {
         $('canvas').css({ 'border': '2px solid', 'border-color': ColorTheme.cl_borderColor });
         var game = new Game();
         game.initGame(canvasObj.canvas, canvasObj.context);
+        game.topInfo();
     }
 
     this.setStartTheme = function () {
@@ -143,7 +221,7 @@ var ColorTheme = function () {
         for (var item in ColorTheme) {
             $('input[name=' + item + ']').val(ColorTheme[item]);
         }
-        setValue(ColorTheme);   
+        setValue(ColorTheme);
     }
 
     this.setCustomTheme = function () {
@@ -156,7 +234,7 @@ var ColorTheme = function () {
             ColorTheme[key] = value.replace('%23', '#');
         }
         localStorage.setItem('ColorTheme', JSON.stringify(ColorTheme));
-        setValue(ColorTheme);  
+        setValue(ColorTheme);
     }
 
     this.setDefaultTheme = function () {
@@ -165,6 +243,9 @@ var ColorTheme = function () {
         this.setStartTheme();
     }
 }
+
+
+
 
 
 // перерисовка канвы
@@ -327,11 +408,12 @@ var Game = function () {
     var _user;
     var _timeGame; // время игры
     var _level; // сложность
-    var _dateGame; // когда проходила игр
     var _cellData; // массив ячеек игры
     var _statusGame; // флаг закончена не закончена
     var _history = [];
+    var _parameters = Parameters.getParameters();
 
+    this.celll = _cellData;
     // создание кнопки отмены
     this.createButtons = function () {
         var _this = this;
@@ -374,9 +456,8 @@ var Game = function () {
 
     },
 
-
-        //добавить ход в историю
-        this.setHistoryItem = function (row, col, typeClick) {
+    //добавить ход в историю
+    this.setHistoryItem = function (row, col, typeClick) {
 
             var keyAction;
             var valueAction;
@@ -444,12 +525,95 @@ var Game = function () {
         cell.redraw(context);
         $('.cancellaction-button').hide();
     }
+
+    setGameInfo = function () {
+        var userData = JSON.parse(localStorage.getItem('UserInfo'));
+        _user = userData.login;
+        var index_level = $("input[type='radio']:checked").val();
+
+        switch (index_level) {
+            case "0":
+                _level = 'Новичок';
+                break;
+            case "1":
+                _level = 'Любитель';
+                break;
+            case "2":
+                _level = 'Профи';
+                break;
+            case "3":
+                var q_width = _parameters.q_width;
+                var q_height = _parameters.q_height;
+                var q_mine = _parameters.q_mine;
+                _level = 'Особый поле ' + q_width + 'x' + q_height + ' ' + q_mine+'мин';
+                break;
+        }
+        _timeGame = $('#timer').text();
+    }
+
     this.startGame = function () {
-        alert('стартанули');
+        $('#mine').text(_parameters.q_mine);
+        start_timer();
 
     }
-    this.stopGame = function () {
-        alert('End')
+
+    sendDataToTopAjax = function (sendObject) {
+        $.ajax({
+            type: "Post",
+            url: "./Data.asmx/setWinInfo",
+            data: "{inputsParam:'" + JSON.stringify(sendObject) + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                let resp = JSON.parse(data.d)
+                if (resp.HasError) {
+                    alert('что то пошло не так');
+                }
+                else {
+                    debugger;
+                    var txt;
+                    for (var i = 0; i < resp.length; i++) {
+                        var item = resp[i];
+                        txt += '<tr<td></td><td>' + (i + 1) + '</td><td>' + item.user + '</td><td>' + item.level + '</td><td>' + item.q_width + ' x ' + item.q_height + '</td><td>' + item.q_mine + '</td><td>' + item.timeGame + ' сек.</td></tr>';
+                    }
+                    $('#top').html(txt);
+                }
+            },
+            error: function (response) {
+                alert('Ошибка сервера :(');
+            }
+        });
+    }
+
+    this.topInfo = function () {
+        sendDataToTopAjax(null);
+    }
+
+    sendDataToTop = function () {
+        setGameInfo();
+
+        var sendObject = {
+            user: _user,
+            timeGame :_timeGame,
+            level: _level,
+            q_width : _parameters.q_width,
+            q_height : _parameters.q_height,
+            q_mine : _parameters.q_mine
+        }
+
+        sendDataToTopAjax(sendObject);
+    }
+
+    this.stopGame = function (caption) {
+        setGameInfo();
+        $('.status_game').text(caption);
+        $('.user_game').text(_user);
+        $('.level_game').text(_level);
+        $('.time_game').text(_timeGame);
+        $('.cancellaction-button').hide();
+        $('#modal_rezult').modal('show');
+        stop_timer();
+        sendDataToTop();
     }
     this.saveGame = function () {
         alert('save')
@@ -533,15 +697,15 @@ var Parameters = (function () {
 })();
 // класс ячейка
 var Cell = function (x, y, cellWidth, cellHeight, suggestMine, suggestEmpty, color) {
-        var _x = x;
-        var _y = y;
-        var _cellWidth = cellWidth;
-        var _cellHeight = cellHeight;
-        var _mine = false;//мина.не мина
-        var _suggestMine = suggestMine; //предположение мина.не мина
-        var _countOfNeighboringMinedCells = 0; // соседние ячейки(цифра)
-        var _open = false; // уже открыта 
-        var _color = color;
+    var _x = x;
+    var _y = y;
+    var _cellWidth = cellWidth;
+    var _cellHeight = cellHeight;
+    var _mine = false;//мина.не мина
+    var _suggestMine = suggestMine; //предположение мина.не мина
+    var _countOfNeighboringMinedCells = 0; // соседние ячейки(цифра)
+    var _open = false; // уже открыта 
+    var _color = color;
 
 
     this.x = function (x) {
@@ -736,12 +900,13 @@ var GameArea = function (parameters) {
             game.setHistoryItem(coords.row, coords.col, typeClick(e));
             $('.cancellaction-button').show();
             if (status.hasFinish && status.gameOver) {
-                //game.stopGame();
-                $('.cancellaction-button').hide();
+                game.stopGame('Вы проиграли');
                 return;
                 //проиграли
             }
             else if (status.hasFinish && !status.gameOver) {
+                game.stopGame('Поздравляем с победой.');
+                return;
                 //победили
             }
 

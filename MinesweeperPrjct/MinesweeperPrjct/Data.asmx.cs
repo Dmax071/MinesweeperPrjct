@@ -3,6 +3,7 @@ using fastJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -33,10 +34,41 @@ namespace MinesweeperPrjct
         {
             Tools tools = new Tools();
             Dictionary<string, object> inp = tools.ParseInpParam(inputsParam);
-            FileTools fileTools = new FileTools("Users.json");
-            fileTools.WriteData(inputsParam);
+            FileDataTools fd = new FileDataTools("GameData");
+            bool state = fd.AddRowsToFile(0, inp);
+            string rezult = string.Empty;
 
-            return fastJSON.JSON.ToJSON("ok"); ;
+            if (state)
+                rezult = fastJSON.JSON.ToJSON("ok");
+            else
+                rezult = SetError("Error");
+
+            return rezult;
+        }
+        [WebMethod(Description = "Метод добавления данных о победах")]
+        public string setWinInfo(string inputsParam)
+        {
+            Tools tools = new Tools();
+            FileDataTools fd = new FileDataTools("GameData");
+
+            if (inputsParam == "null") {
+                return fd.RetunsTopTable();
+            }
+            Dictionary<string, object> inp = tools.ParseInpParam(inputsParam);
+            bool state = fd.AddRowsToFile(1, inp);
+            string rezult = string.Empty;
+
+            if (state) 
+                rezult = fd.RetunsTopTable();
+            else
+                rezult = SetError("Error");
+
+            return rezult;
+        }
+
+        private static string SetError(string message)
+        {
+            return fastJSON.JSON.ToJSON(new RetVal().SetError(message));
         }
     }
 
@@ -63,8 +95,174 @@ namespace MinesweeperPrjct
             return inp;
         }
 
+        public string TableToJson(DataTable dataTable) {
+            Dictionary<string, string> rezItem = null;
+            List<Dictionary<string, string>> rez = new List<Dictionary<string, string>>();
+
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                rezItem = new Dictionary<string, string>();
+                foreach (DataColumn item in dataTable.Columns)
+                    rezItem[item.Caption] = dataTable.Rows[i][item].ToString();
+                rez.Add(rezItem);
+            }
+            return fastJSON.JSON.ToJSON(rez);
+        }
+
     }
 
+    public class FileDataTools
+    {
+        string _captionFile;
+        DataSet _gameData = null;
+        public FileDataTools(string captionFile)
+        {
+            this._captionFile = HttpContext.Current.Server.MapPath("contents/" + captionFile + ".xml"); ;
+        }
+        //проверка есть ли такой же логин и пароль
+        //false - нет true - есть
+        public bool CheckFileToDuble(string login, string password)
+        {
+            bool rezult = false;
+            DataTable usersDt = _gameData.Tables["Users"];
+            var foundRowAll = usersDt.Rows.Cast<DataRow>().FirstOrDefault(t => (t["login"].ToString() == login) && (t["password"].ToString() == password));
+            if (foundRowAll != null)
+                rezult = true;
+            return rezult;
+        }
+
+        public bool CheckFileToLogin(string login)
+        {
+            bool rezult = false;
+            DataTable usersDt = _gameData.Tables["Users"];
+            var foundRowLogin = usersDt.Rows.Cast<DataRow>().FirstOrDefault(t => t["login"].ToString() == login);
+            if (foundRowLogin != null)
+                rezult = true;
+            return rezult;
+        }
+
+
+        DataTable CreateTable(byte typeData)
+        {
+            DataTable dt = null;
+            if (typeData == 0)
+            {
+                DataTable usersDt = new DataTable();
+                usersDt.TableName = "Users";
+                usersDt.TableName = "Users";
+                usersDt.Columns.Add("index");
+                usersDt.Columns.Add("login");
+                usersDt.Columns.Add("password");
+                dt = usersDt;
+            }
+            else
+            {
+                DataTable gamesDt = new DataTable();
+                gamesDt.TableName = "GamesTop";
+                gamesDt.Columns.Add("index");
+                gamesDt.Columns.Add("user");
+                gamesDt.Columns.Add("level");
+                gamesDt.Columns.Add("timeGame");
+                gamesDt.Columns.Add("q_width");
+                gamesDt.Columns.Add("q_height");
+                gamesDt.Columns.Add("q_mine");
+                dt = gamesDt;
+            }
+            return dt;
+
+        }
+
+
+        DataSet CreateFile()
+        {
+            DataSet gameData = new DataSet();
+            gameData.Tables.Add(CreateTable(0));
+            gameData.Tables.Add(CreateTable(1));
+            return gameData;
+        }
+        DataSet LoadFile()
+        {
+            DataSet gameData = new DataSet();
+            gameData.ReadXml(_captionFile);
+            return gameData;
+        }
+
+        //добавление строки в файл 0-Users 1-GamesTop
+        public bool AddRowsToFile(byte typeData, Dictionary<string, object> data)
+        {
+            _gameData = new DataSet();
+            if (File.Exists(_captionFile))
+            {
+                _gameData = LoadFile();
+                if (_gameData.Tables["GamesTop"] == null)
+                {
+                    _gameData.Tables.Add(CreateTable(1));
+                }
+            }
+            else
+                _gameData = CreateFile();
+
+
+            if (typeData == 0)
+            {
+                bool logPsw = CheckFileToDuble(data["login"].ToString(), data["password"].ToString());
+                if (!logPsw)
+                {
+                    bool log = CheckFileToLogin(data["login"].ToString());
+                    if (!log)
+                    {
+                        WriteToFile(typeData, data);
+                        return true;
+                    }
+                    else return false;
+
+                }
+                else return true;
+            }
+            else
+            {
+                WriteToFile(typeData, data);
+                return true;
+            }
+
+
+        }
+
+        void WriteToFile(byte typeData, Dictionary<string, object> data)
+        {
+            DataRow row = _gameData.Tables[(typeData == 0 ? "Users" : "GamesTop")].NewRow();
+            foreach (KeyValuePair<string, object> kvp in data)
+            {
+                row["index"] = 0;
+                row[kvp.Key] = kvp.Value.ToString();
+            }
+            _gameData.Tables[(typeData == 0 ? "Users" : "GamesTop")].Rows.Add(row);
+            _gameData.WriteXml(_captionFile);
+        }
+
+        public string RetunsTopTable() {
+            Tools tools = new Tools();
+            if (_gameData == null) {
+                _gameData = LoadFile();
+            }
+            return tools.TableToJson(_gameData.Tables["GamesTop"]);
+        }
+
+    }
+    public class RetVal
+    {
+        public bool HasError;
+        public string Message;
+        public RetVal SetError(string errMessage)
+        {
+            HasError = true;
+            Message = errMessage;
+            return this;
+        }
+    }
+
+
+    //грохнуть
     public class FileTools
     {
         string _captionFile;
