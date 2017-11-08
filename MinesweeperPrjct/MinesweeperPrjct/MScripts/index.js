@@ -1,9 +1,6 @@
 ﻿$(document).ready(function () {
     $("body").on("contextmenu", false);
 
-    var canvas = document.querySelector('canvas')
-    var context = canvas.getContext('2d')
-
     $('.log_in_button').on('click', function (e) {
         var login = $("input[name = login]").val();
         var pasw = $("input[name = password]").val();
@@ -95,16 +92,80 @@
             $(this).val('');
             return false
         }
-        var parameters = Parameters.getParameters();
-        var gameArea = new GameArea(parameters);
-        gameArea.drawArea();
-
+        var canvasObj = CanvasClearObject.getCanvasObj();
+        var game = new Game();
+        game.initGame(canvasObj.canvas, canvasObj.context);
     })
 
-    var game = new Game();
-    game.initGame(canvas, context);
 
+    //var canvas = document.querySelector('canvas')
+    //var context = canvas.getContext('2d')
+    //var game = new Game();
+    //game.initGame(canvas, context);
+
+    var colorTheme = new ColorTheme();
+    colorTheme.setStartTheme();
+    $('.set_default_color_btn').on('click', function (e) {
+        colorTheme.setDefaultTheme();
+    })
+    $('.set_color_btn').on('click', function (e) {
+        colorTheme.setCustomTheme();
+    })
 })
+
+//параметры цветовыъ схем
+var ColorTheme = function () {
+
+    getValueTheme = function () {
+        var ColorTheme = JSON.parse(localStorage.getItem('ColorTheme'));
+        if (!ColorTheme) {
+            var ColorTheme = {
+                cl_background: '#ffffff',
+                cl_fontlColor: '#000000',
+                cl_borderColor: '#000000',
+                cl_cellColor: '#dddddd'
+            }
+            localStorage.setItem('ColorTheme', JSON.stringify(ColorTheme));
+        }
+            return ColorTheme
+    }
+
+    setValue = function (ColorTheme) {
+        var canvasObj = CanvasClearObject.getCanvasObj();
+        $('.general_area').css({ 'background': ColorTheme.cl_background, 'color': ColorTheme.cl_fontlColor })
+        $('canvas').css({ 'border': '2px solid', 'border-color': ColorTheme.cl_borderColor });
+        var game = new Game();
+        game.initGame(canvasObj.canvas, canvasObj.context);
+    }
+
+    this.setStartTheme = function () {
+        var ColorTheme = getValueTheme();
+        for (var item in ColorTheme) {
+            $('input[name=' + item + ']').val(ColorTheme[item]);
+        }
+        setValue(ColorTheme);   
+    }
+
+    this.setCustomTheme = function () {
+        var objColor = $("input[name^='cl_']");
+        var ColorTheme = {}
+        for (var i = 0; i < objColor.length; i++) {
+            var item = objColor[i];
+            var key = $(item).attr('name');
+            var value = $(item).val();
+            ColorTheme[key] = value.replace('%23', '#');
+        }
+        localStorage.setItem('ColorTheme', JSON.stringify(ColorTheme));
+        setValue(ColorTheme);  
+    }
+
+    this.setDefaultTheme = function () {
+        localStorage.removeItem('ColorTheme');
+        var ColorTheme = getValueTheme();
+        this.setStartTheme();
+    }
+}
+
 
 // перерисовка канвы
 var CanvasClearObject = (function () {
@@ -471,15 +532,16 @@ var Parameters = (function () {
     };
 })();
 // класс ячейка
-var Cell = function (x, y, cellWidth, cellHeight, suggestMine, suggestEmpty) {
-    var _x = x;
-    var _y = y;
-    var _cellWidth = cellWidth;
-    var _cellHeight = cellHeight;
-    var _mine = false;//мина.не мина
-    var _suggestMine = suggestMine; //предположение мина.не мина
-    var _countOfNeighboringMinedCells = 0; // соседние ячейки(цифра)
-    var _open = false; // уже открыта 
+var Cell = function (x, y, cellWidth, cellHeight, suggestMine, suggestEmpty, color) {
+        var _x = x;
+        var _y = y;
+        var _cellWidth = cellWidth;
+        var _cellHeight = cellHeight;
+        var _mine = false;//мина.не мина
+        var _suggestMine = suggestMine; //предположение мина.не мина
+        var _countOfNeighboringMinedCells = 0; // соседние ячейки(цифра)
+        var _open = false; // уже открыта 
+        var _color = color;
 
 
     this.x = function (x) {
@@ -526,7 +588,7 @@ var Cell = function (x, y, cellWidth, cellHeight, suggestMine, suggestEmpty) {
             context.clearRect(_x, _y, _cellWidth, _cellHeight);
             context.strokeStyle = '#000';
             context.lineWidth = 1;
-            context.fillStyle = '#ddd';
+            context.fillStyle = _color.replace('%23', '#');
             context.fillRect(_x, _y, _cellHeight, _cellWidth);
             context.strokeRect(_x, _y, _cellHeight, _cellWidth);
 
@@ -536,7 +598,7 @@ var Cell = function (x, y, cellWidth, cellHeight, suggestMine, suggestEmpty) {
     this.drawCloseEmpty = function (context) {
         context.strokeStyle = '#000';
         context.lineWidth = 1;
-        context.fillStyle = '#ddd';
+        context.fillStyle = _color.replace('%23', '#');
         context.fillRect(_x, _y, _x + _cellHeight, _y + _cellWidth);
         context.strokeRect(_x, _y, _x + _cellHeight, _y + _cellWidth);
     }
@@ -572,9 +634,6 @@ var Cell = function (x, y, cellWidth, cellHeight, suggestMine, suggestEmpty) {
         this.redraw(context);
         context.drawImage(img, _x, _y, _cellWidth, _cellHeight);
     }
-
-
-
 }
 
 
@@ -599,7 +658,7 @@ var GameArea = function (parameters) {
             cells[i] = [];
             var j = 0;
             for (var x = 0; x < canvasWidth; x += cellWidth) {
-                var cell = new Cell(x, y, _parameters.cell_width, _parameters.cell_height, false, false, 0)
+                var cell = new Cell(x, y, _parameters.cell_width, _parameters.cell_height, false, false, _parameters.cl_cellColor)
                 cell.drawCloseEmpty(context);
                 cells[i][j] = cell;
                 j++;
