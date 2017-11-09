@@ -2,22 +2,22 @@
 <NewDataSet>
   <Users>
     <index>0</index>
-    <login>1234</login>
-    <password>0</password>
-  </Users>
-  <Users>
-    <index>0</index>
-    <login>111</login>
-    <password>1</password>
+    <login>11</login>
+    <password>11</password>
   </Users>
   <Users>
     <index>0</index>
     <login>12</login>
     <password>12</password>
   </Users>
+  <Users>
+    <index>0</index>
+    <login>vvv</login>
+    <password>11</password>
+  </Users>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
     <level>Новичок</level>
     <timeGame>1</timeGame>
     <q_width>9</q_width>
@@ -26,25 +26,61 @@
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
+    <level>Профи</level>
+    <timeGame>0</timeGame>
+    <q_width>30</q_width>
+    <q_height>16</q_height>
+    <q_mine>99</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
     <level>Новичок</level>
-    <timeGame>3</timeGame>
+    <timeGame>10</timeGame>
     <q_width>9</q_width>
     <q_height>9</q_height>
     <q_mine>10</q_mine>
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
     <level>Новичок</level>
-    <timeGame>3</timeGame>
+    <timeGame>10</timeGame>
     <q_width>9</q_width>
     <q_height>9</q_height>
     <q_mine>10</q_mine>
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>1</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>1</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>42</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
     <level>Новичок</level>
     <timeGame>0</timeGame>
     <q_width>9</q_width>
@@ -53,16 +89,34 @@
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
     <level>Новичок</level>
-    <timeGame>0</timeGame>
+    <timeGame>5</timeGame>
     <q_width>9</q_width>
     <q_height>9</q_height>
     <q_mine>10</q_mine>
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>5</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>2</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
     <level>Новичок</level>
     <timeGame>4</timeGame>
     <q_width>9</q_width>
@@ -71,16 +125,34 @@
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
     <level>Новичок</level>
-    <timeGame>2</timeGame>
+    <timeGame>5</timeGame>
     <q_width>9</q_width>
     <q_height>9</q_height>
     <q_mine>10</q_mine>
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>4</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>3</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
     <level>Новичок</level>
     <timeGame>1</timeGame>
     <q_width>9</q_width>
@@ -89,34 +161,43 @@
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
     <level>Новичок</level>
-    <timeGame>2</timeGame>
+    <timeGame>8</timeGame>
     <q_width>9</q_width>
     <q_height>9</q_height>
     <q_mine>10</q_mine>
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
     <level>Новичок</level>
-    <timeGame>1</timeGame>
+    <timeGame>8</timeGame>
     <q_width>9</q_width>
     <q_height>9</q_height>
     <q_mine>10</q_mine>
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
     <level>Новичок</level>
-    <timeGame>2</timeGame>
+    <timeGame>5</timeGame>
     <q_width>9</q_width>
     <q_height>9</q_height>
     <q_mine>10</q_mine>
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>3</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
     <level>Новичок</level>
     <timeGame>0</timeGame>
     <q_width>9</q_width>
@@ -125,7 +206,97 @@
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>1</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>2</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>12</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>42</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>5</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>2</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>2</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>3</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>4</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
     <level>Новичок</level>
     <timeGame>6</timeGame>
     <q_width>9</q_width>
@@ -134,9 +305,396 @@
   </GamesTop>
   <GamesTop>
     <index>0</index>
-    <user>1234</user>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>6</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>12</user>
+    <level>Новичок</level>
+    <timeGame>2</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
     <level>Новичок</level>
     <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>15</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>2</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>11</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>11</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>10</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>12</user>
+    <level>Новичок</level>
+    <timeGame>2</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>4</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>5</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>5</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>10</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>4</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>1</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>7</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>4</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>7</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>7</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>13</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>9</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>22</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>11</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>11</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>5</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>0</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>3</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>11</user>
+    <level>Новичок</level>
+    <timeGame>4</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>24</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>11</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>6</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>9</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>3</timeGame>
     <q_width>9</q_width>
     <q_height>9</q_height>
     <q_mine>10</q_mine>

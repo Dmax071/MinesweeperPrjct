@@ -34,31 +34,33 @@ namespace MinesweeperPrjct
         {
             Tools tools = new Tools();
             Dictionary<string, object> inp = tools.ParseInpParam(inputsParam);
-            FileDataTools fd = new FileDataTools("GameData");
+            FileDataTools fd = new FileDataTools("GameData.xml");
             bool state = fd.AddRowsToFile(0, inp);
             string rezult = string.Empty;
 
             if (state)
-                rezult = fastJSON.JSON.ToJSON("ok");
+                rezult = SetOk();
             else
                 rezult = SetError("Error");
 
             return rezult;
         }
+
         [WebMethod(Description = "Метод добавления данных о победах")]
         public string setWinInfo(string inputsParam)
         {
             Tools tools = new Tools();
-            FileDataTools fd = new FileDataTools("GameData");
+            FileDataTools fd = new FileDataTools("GameData.xml");
 
-            if (inputsParam == "null") {
+            if (inputsParam == "null")
+            {
                 return fd.RetunsTopTable();
             }
             Dictionary<string, object> inp = tools.ParseInpParam(inputsParam);
             bool state = fd.AddRowsToFile(1, inp);
             string rezult = string.Empty;
 
-            if (state) 
+            if (state)
                 rezult = fd.RetunsTopTable();
             else
                 rezult = SetError("Error");
@@ -66,9 +68,40 @@ namespace MinesweeperPrjct
             return rezult;
         }
 
+        [WebMethod(Description = "Метод добавления данных об игре")]
+        public string setGameInfo(string inputsParam)
+        {
+            string rezult = string.Empty;
+            Tools tools = new Tools();
+            Dictionary<string, object> inp = tools.ParseInpParam(inputsParam);
+            FileDataTools fd = new FileDataTools("GameData.json");
+            bool state = fd.AddRowsToFileJson(inp);
+            if (state)
+                rezult = SetOk();
+            else
+                rezult = SetError("Error");
+
+            return rezult;
+        }
+
+        [WebMethod(Description = "Метод проверки есть ли у игрока игра")]
+        public string getGameInfo(string inputsParam)
+        {
+            Tools tools = new Tools();
+            Dictionary<string, object> inp = tools.ParseInpParam(inputsParam);
+            FileDataTools fd = new FileDataTools("GameData.json");
+            Dictionary<string, object> returns = fd.CheckAndReturnsData(inp);
+            return fastJSON.JSON.ToJSON(returns);
+        }
+
         private static string SetError(string message)
         {
             return fastJSON.JSON.ToJSON(new RetVal().SetError(message));
+        }
+
+        private static string SetOk()
+        {
+            return fastJSON.JSON.ToJSON("ok");
         }
     }
 
@@ -95,7 +128,8 @@ namespace MinesweeperPrjct
             return inp;
         }
 
-        public string TableToJson(DataTable dataTable) {
+        public string TableToJson(DataTable dataTable)
+        {
             Dictionary<string, string> rezItem = null;
             List<Dictionary<string, string>> rez = new List<Dictionary<string, string>>();
 
@@ -115,13 +149,15 @@ namespace MinesweeperPrjct
     {
         string _captionFile;
         DataSet _gameData = null;
+        Tools _tools = new Tools();
         public FileDataTools(string captionFile)
         {
-            this._captionFile = HttpContext.Current.Server.MapPath("contents/" + captionFile + ".xml"); ;
+            this._captionFile = HttpContext.Current.Server.MapPath("contents/" + captionFile); ;
         }
+
         //проверка есть ли такой же логин и пароль
         //false - нет true - есть
-        public bool CheckFileToDuble(string login, string password)
+        bool CheckFileToDuble(string login, string password)
         {
             bool rezult = false;
             DataTable usersDt = _gameData.Tables["Users"];
@@ -131,7 +167,7 @@ namespace MinesweeperPrjct
             return rezult;
         }
 
-        public bool CheckFileToLogin(string login)
+        bool CheckFileToLogin(string login)
         {
             bool rezult = false;
             DataTable usersDt = _gameData.Tables["Users"];
@@ -141,6 +177,55 @@ namespace MinesweeperPrjct
             return rezult;
         }
 
+        bool CheckGameToLogin(string login)
+        {
+            Dictionary<string, object> readData = ReadDataToJson();
+            object obj = null;
+            try
+            {
+                obj = readData[login];
+            }
+            catch
+            {
+                return false;
+            }
+            return true;//есть игра 
+        }
+
+        string GetLoginGame(Dictionary<string, object> data)
+        {
+            string login = string.Empty;
+            Dictionary<string, object> parameters = null;
+            try
+            {
+                parameters = data["parameters"] as Dictionary<string, object>;
+                login = parameters["login"].ToString();
+            }
+            catch {
+                parameters = data["login"] as Dictionary<string, object>;
+                login = data["login"].ToString();
+            }
+            return login;
+        }
+      
+        void WriteDataToJson(Dictionary<string, object> dataFile)
+        {
+            using (StreamWriter sw = new StreamWriter(_captionFile, false, System.Text.Encoding.Default))
+            {
+                sw.WriteLine(fastJSON.JSON.ToJSON(dataFile));
+            }
+        }
+
+        Dictionary<string, object> ReadDataToJson()
+        {
+            string data = string.Empty;
+            using (StreamReader sr = new StreamReader(_captionFile, System.Text.Encoding.Default))
+            {
+                data = sr.ReadToEnd();
+            }
+
+            return _tools.ParseInpParam(data);
+        }
 
         DataTable CreateTable(byte typeData)
         {
@@ -172,7 +257,6 @@ namespace MinesweeperPrjct
 
         }
 
-
         DataSet CreateFile()
         {
             DataSet gameData = new DataSet();
@@ -180,11 +264,67 @@ namespace MinesweeperPrjct
             gameData.Tables.Add(CreateTable(1));
             return gameData;
         }
+
         DataSet LoadFile()
         {
             DataSet gameData = new DataSet();
             gameData.ReadXml(_captionFile);
             return gameData;
+        }
+
+        void WriteToFile(byte typeData, Dictionary<string, object> data)
+        {
+            DataRow row = _gameData.Tables[(typeData == 0 ? "Users" : "GamesTop")].NewRow();
+            foreach (KeyValuePair<string, object> kvp in data)
+            {
+                row["index"] = 0;
+                row[kvp.Key] = kvp.Value.ToString();
+            }
+            _gameData.Tables[(typeData == 0 ? "Users" : "GamesTop")].Rows.Add(row);
+            _gameData.WriteXml(_captionFile);
+        }
+
+        public bool AddRowsToFileJson(Dictionary<string, object> data)
+        {
+            string login = GetLoginGame(data);
+            try
+            {
+                if (!File.Exists(_captionFile))
+                {
+                    Dictionary<string, object> returnsData = new Dictionary<string, object>();
+                    returnsData[login] = data;
+                    WriteDataToJson(returnsData);
+                }
+                else
+                {
+                    Dictionary<string, object> readData = ReadDataToJson();
+                    readData[login] = data;
+                    WriteDataToJson(readData);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public Dictionary<string, object> CheckAndReturnsData(Dictionary<string, object> data)
+        {
+            Dictionary<string, object> returnsData = null;
+            if (File.Exists(_captionFile))//если файл есть 
+            {
+                string login = GetLoginGame(data);
+                bool hasGame = CheckGameToLogin(login);
+                if (hasGame)
+                {
+                    Dictionary<string, object> readData = ReadDataToJson();
+                    returnsData = readData[login] as Dictionary<string, object>;
+                    readData.Remove(login);
+                    WriteDataToJson(readData);
+                }
+            }
+            return returnsData;
         }
 
         //добавление строки в файл 0-Users 1-GamesTop
@@ -201,7 +341,6 @@ namespace MinesweeperPrjct
             }
             else
                 _gameData = CreateFile();
-
 
             if (typeData == 0)
             {
@@ -224,28 +363,29 @@ namespace MinesweeperPrjct
                 WriteToFile(typeData, data);
                 return true;
             }
-
-
         }
 
-        void WriteToFile(byte typeData, Dictionary<string, object> data)
+        public string RetunsTopTable()
         {
-            DataRow row = _gameData.Tables[(typeData == 0 ? "Users" : "GamesTop")].NewRow();
-            foreach (KeyValuePair<string, object> kvp in data)
+            DataTable returns = null;
+            if (_gameData == null)
             {
-                row["index"] = 0;
-                row[kvp.Key] = kvp.Value.ToString();
+                try
+                {
+                    _gameData = LoadFile();
+                }
+                catch
+                {
+                    _gameData = CreateFile();
+                    returns = _gameData.Tables["GamesTop"];
+                }
             }
-            _gameData.Tables[(typeData == 0 ? "Users" : "GamesTop")].Rows.Add(row);
-            _gameData.WriteXml(_captionFile);
-        }
 
-        public string RetunsTopTable() {
-            Tools tools = new Tools();
-            if (_gameData == null) {
-                _gameData = LoadFile();
-            }
-            return tools.TableToJson(_gameData.Tables["GamesTop"]);
+            DataView view = new DataView(_gameData.Tables["GamesTop"]);
+            view.Sort = "q_width ASC, q_mine ASC, q_height ASC, timeGame ASC";
+            returns = view.ToTable().AsEnumerable().Take(10).CopyToDataTable();
+
+            return _tools.TableToJson(returns);
         }
 
     }
@@ -258,74 +398,6 @@ namespace MinesweeperPrjct
             HasError = true;
             Message = errMessage;
             return this;
-        }
-    }
-
-
-    //грохнуть
-    public class FileTools
-    {
-        string _captionFile;
-        Tools tools = null;
-        public FileTools(string captionFile)
-        {
-            this._captionFile = HttpContext.Current.Server.MapPath("contents/" + captionFile); ;
-        }
-
-        public void WriteData(string dataToFile)
-        {
-            List<string> list = new List<string>();
-            Dictionary<string, object> elemDataFile = tools.ParseInpParam(dataToFile);
-            List<Dictionary<string, object>> dataFile = null;
-            if (!File.Exists(_captionFile))
-            {
-                dataFile = new List<Dictionary<string, object>>();
-                using (StreamWriter sw = new StreamWriter(_captionFile, false, System.Text.Encoding.Default))
-                {
-                    dataFile.Add(elemDataFile);
-                    sw.WriteLine(fastJSON.JSON.ToJSON(dataFile));
-                }
-                // если создан файл и записан
-            }
-            else
-            {
-
-                bool chekedDataFile = ChekDataInFile(elemDataFile);
-                if (!chekedDataFile)
-                {
-                    //если не найден пользователь
-                    string strData = ReadData();
-                    dataFile = tools.ParseFileParam(strData);
-                    dataFile.Add(elemDataFile);
-
-                    using (StreamWriter sw = new StreamWriter(_captionFile, false, System.Text.Encoding.Default))
-                    {
-                        sw.WriteLine(fastJSON.JSON.ToJSON(dataFile));
-                    }
-                }
-                //// если записан
-
-            }
-        }
-
-        string ReadData()
-        {
-            string data = string.Empty;
-            using (StreamReader sr = new StreamReader(_captionFile, System.Text.Encoding.Default))
-            {
-                data = sr.ReadToEnd();
-            }
-
-            return data;
-        }
-        // true есть false нет
-        public bool ChekDataInFile(object chekedData)
-        {
-            string strData = ReadData();
-            List<Dictionary<string, object>> dataFile = tools.ParseFileParam(strData);
-            if (dataFile.Contains(chekedData as Dictionary<string, object>))
-                return true;
-            return false;
         }
     }
 

@@ -11,7 +11,6 @@
     <script src="./bootstrap 4.6/js/jquery-1.11.1.min.js"></script>
     <script src="./bootstrap 4.6/js/tether.min.js"></script>
     <script src="./bootstrap 4.6/js/bootstrap.min.js"></script>
-    <script src="./Plugins/Timer/jquery.timer.js"></script>
 
     <script src="./MScripts/index.js"></script>
     <header>
@@ -27,13 +26,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-inline navbar-right" style="font-weight: 600; font-size: 1.05rem">
+                <div class="form-inline navbar-right right_input_block">
                     <a class="btn btn-secondary" href="#" id="no-input-user" data-toggle="modal" data-target="#modal_login"
                         <span aria-hidden="true">Войти</span>
                     </a>
                     <a class="btn btn-secondary" id="input-user" style="display:none">
                         <span aria-hidden="true">
-                            <img class="card-img-top img-fluid rounded-circle header-img" src="./images/User.png" style="width:2rem"><t id="login" class="header-login">Логин</t>
+                            <img class="card-img-top img-fluid rounded-circle header-img" src="./images/User.png"><t id="login" class="header-login">Логин</t>
                         </span>
                     </a>
                 </div>
@@ -43,22 +42,22 @@
     </header>
     <main>
         <div class="container body_container" role="main">
-            <div class="row border_row canvas_row general_area" style="height:690px">
+            <div class="row border_row canvas_row general_area">
                 <div class="col-7 p-2">
                     <div class="d-flex flex-row justify-content-center">
                         <div class="p-1">
                             <div class="d-flex flex-row justify-content-center">
                                 <div class="p-1">
-                                    <img class="img-fluid " src="./images/clock.png" style="width:2.5rem">
+                                    <img class="img-fluid clock_img" src="./images/clock.png">
                                 </div>
                                 <div class="col-3">
-                                    <p class="form-control" id="timer" style="text-align: center;width:4rem">0.000</p>
+                                    <p class="form-control" id="timer">0</p>
                                 </div>
                                 <div class="p-1">
-                                    <img class="img-fluid " src="./images/mine.png" style="width:4rem">
+                                    <img class="img-fluid mine_img" src="./images/mine.png">
                                 </div>
                                 <div class="col-2">
-                                    <p class="form-control" id="mine" style="text-align: center; width: 3rem">0</p>
+                                    <p class="form-control" id="mine">0</p>
                                 </div>
                                 <div class="cancelActions-area"></div>
 
@@ -66,7 +65,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-center canvas_elem">
-                        <canvas style="poi"></canvas>
+                        <canvas></canvas>
                     </div>
                 </div>
                 <div class="col-5 p-2">
@@ -81,12 +80,10 @@
                                     <a class="nav-link" id="color-tools-tab" data-toggle="tab" href="#color-tools-cont" role="tab" aria-controls="profile" aria-selected="false">Оформление</a>
                                 </li>
                             </ul>
-                            <div class="tab-content" style="margin-top:1rem">
+                            <div class="tab-content">
                                 <div class="tab-pane fade show active" id="base-tools-cont" role="tabpanel" aria-labelledby="base-tools-tab">
-                                    <form id="baseForm">
-
+                                    <form id="baseForm"
                                         <fieldset class="form-group">
-                                            <!--<legend>Уровень игры</legend>-->
                                             <div class="form-check">
                                                 <label class="form-check-label">
                                                     <input type="radio" class="form-check-input" name="level" id="level_easy" value="0" checked>
@@ -209,22 +206,22 @@
                 </div>
             </div>
             <div class="row border_row">
-                        <table class="table table-striped table-sm table-bordered res_grid_table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 7%;"> N п/п</th>
-                                    <th style="width: 23%;">Игрок</th>
-                                    <th style="width: 15%;">Сложность </th>
-                                    <th style="width: 10%;">Поле</th>
-                                    <th style="width: 15%;">Количество мин </th>
-                                    <th style="width: 10%;">Время</th>
-                                </tr>
-                            </thead>
-                            <tbody id="top"></tbody>
-                        </table>
-                   
+                <table class="table table-striped table-sm table-bordered res_grid_table" style="display:none">
+                    <thead>
+                        <tr>
+                            <th style="width: 7%;"> N п/п</th>
+                            <th style="width: 23%;">Игрок</th>
+                            <th style="width: 15%;">Сложность </th>
+                            <th style="width: 10%;">Поле</th>
+                            <th style="width: 15%;">Количество мин </th>
+                            <th style="width: 10%;">Время</th>
+                        </tr>
+                    </thead>
+                    <tbody id="top"></tbody>
+                </table>
 
-          
+
+
             </div>
         </div>
 
@@ -233,7 +230,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modal_header">Вход</h5>
+                        <h5 class="modal-title">Вход</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -267,7 +264,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modal_header"></h5>
+                        <h5 class="modal-title"></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -275,14 +272,14 @@
                     <div class="modal-body">
                         <div class="container">
                             <form id="rezultForm">
-                                <h5 class="status_game" style="text-align:center"></h5>
+                                <h5 class="status_game"></h5>
                                 <div class="d-flex flex-row d-flex justify-content-center">
                                     <div class="p-1">
                                         <div class="d-flex flex-row">
                                             <div class="p-1">Игрок:</div>
                                             <div class="p-1 user_game">Игрок</div>
                                         </div>
-                                        </div>
+                                    </div>
                                     <div class="p-1">
                                         <div class="d-flex flex-row">
                                             <div class="p-1">Сложность:</div>
@@ -308,6 +305,55 @@
             </div>
         </div>
 
+        <!--модалка на сохранение-->
+        <div class="modal fade" id="modal_save" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form id="loginForm">
+                                <h5 class="status_save" style="text-align:center">У вас есть незаконченная игра. Желаете сохранить?</h5>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary save_in_button" data-dismiss="modal">Сохранить</button>
+                        <button type="button" class="btn btn-primary cancel_save_in_button" data-dismiss="modal">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--модалка на продолжение-->
+        <div class="modal fade" id="modal_load" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form id="loginForm">
+                                <h5 class="status_save" style="text-align:center">У вас есть незаконченная игра. Желаете продолжить?</h5>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary load_in_button" data-dismiss="modal">Продолжить</button>
+                        <button type="button" class="btn btn-primary cancel_load_in_button" data-dismiss="modal">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <footer class="footer">
@@ -315,7 +361,5 @@
             <div class="p-1">Сапер онлайн</div>
         </div>
     </footer>
-
-
 </body>
 </html>

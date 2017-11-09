@@ -10,7 +10,6 @@
         if (chr < '0' || chr > '9') {
             return false;
         }
-
     })
 
     function getChar(event) {
@@ -58,16 +57,9 @@
         game.initGame(canvasObj.canvas, canvasObj.context);
     })
 
-
-    //var canvas = document.querySelector('canvas')
-    //var context = canvas.getContext('2d')
-    //var game = new Game();
-    //game.initGame(canvas, context);
-
     var user = new UserData();
     user.startUserData();
 
-    $('.log_in_button').on('click', function (e) { })
     $('#input-user').on('click', function (e) {
         user.LogOut();
     })
@@ -92,25 +84,40 @@
         var game = new Game();
         game.initGame(canvasObj.canvas, canvasObj.context);
     })
+
+    $('.save_in_button').on('click', function (e) {
+        var game = new Game();
+        game.saveGameAjax(localStorage.getItem('GameInfo'));
+        game.stopGame('');
+        localStorage.removeItem('GameInfo');
+    })
+
+    $('.cancel_save_in_button').on('click', function (e) {
+        var game = new Game();
+        game.stopGame('');
+        localStorage.removeItem('GameInfo');
+    })
 })
 
 
 var timer;
-function start_timer() {
-    if (timer) clearInterval(timer);
-    secs = 0;
-   $('#timer').text(secs);
-    timer = setInterval(
-        function () {
-            secs++;
-            $('#timer').text(secs);
-        },
-        1000
-    );
-}
+var Timer = function () {
+    this.start_timer = function () {
+        if (timer) clearInterval(timer);
+        secs = 0;
+        $('#timer').text(secs);
+        timer = setInterval(
+            function () {
+                secs++;
+                $('#timer').text(secs);
+            },
+            1000
+        );
+    }
 
-function stop_timer() {
-    if (timer) clearInterval(timer);
+    this.stop_timer = function () {
+        if (timer) clearInterval(timer);
+    }
 }
 
 
@@ -154,15 +161,28 @@ var UserData = function () {
                 }
             });
 
-       }
+            var game = new Game();
+            game.getGameAjax(sendJSON);
+
+        }
         else {
             alert('Введены не допустимые символы!');
-       }
+        }
     }
 
     this.LogOut = function () {
+
         localStorage.removeItem('UserInfo');
-        setValueToForm();
+        localStorage.removeItem('GameInfo');
+        var _gameInfo = JSON.parse(localStorage.getItem('GameInfo'));
+        if (_gameInfo)
+            if (!_gameInfo.statusGame)
+                $('#modal_save').modal('show');
+        var canvasObj = CanvasClearObject.getCanvasObj();
+     
+        var game = new Game();
+        game.initGame(canvasObj.canvas, canvasObj.context);
+        setValueToForm(); //TO DO
     }
 
     this.clearFields = function () {
@@ -245,15 +265,11 @@ var ColorTheme = function () {
 }
 
 
-
-
-
 // перерисовка канвы
 var CanvasClearObject = (function () {
     var canvasObject;
     function createCanvasObj() {
-        $('.canvas_elem').html('');
-        $('.canvas_elem').html('<canvas style="border: 1px solid #000;"></canvas>');
+        $('.canvas_elem').html('<canvas></canvas>');
         var canvas = document.querySelector('canvas')
         var context = canvas.getContext('2d')
         var obj = {
@@ -264,9 +280,7 @@ var CanvasClearObject = (function () {
     }
     return {
         getCanvasObj: function () {
-            //if (!objParameters) {
             canvasObject = createCanvasObj();
-            //}
             return canvasObject;
         }
     };
@@ -285,25 +299,25 @@ var CellGenerator = function (cellData, parameters) {
 
     getMine = function (x, y) {
         var cell = _cellData[x][y];
-        var mine = cell.mine();
+        var mine = cell.mine;
         return mine;
     }
 
     setMine = function (x, y) {
         var cell = _cellData[x][y];
-        cell.mine(true);
+        cell.mine = true;
         _cellData[x][y] = cell;
 
     }
     getCountOfNeighboringMined = function (x, y) {
         var cell = _cellData[x][y];
-        var countOfNeighboringMinedCells = cell.countOfNeighboringMinedCells();
+        var countOfNeighboringMinedCells = cell.countOfNeighboringMinedCells;
         return countOfNeighboringMinedCells;
     }
 
     setCountOfNeighboringMined = function (x, y, count) {
         var cell = _cellData[x][y];
-        cell.countOfNeighboringMinedCells(count);
+        cell.countOfNeighboringMinedCells = count;
         _cellData[x][y] = cell;
     }
     // row col координаты в массиве кликнутой ячейки
@@ -387,8 +401,6 @@ var CellGenerator = function (cellData, parameters) {
                         setCountOfNeighboringMined(x, y, count + 1)
                     }
                 }
-
-
             }
         }
         return _cellData;
@@ -405,15 +417,28 @@ var CellGenerator = function (cellData, parameters) {
 
 //класс Игра
 var Game = function () {
-    var _user;
     var _timeGame; // время игры
     var _level; // сложность
     var _cellData; // массив ячеек игры
-    var _statusGame; // флаг закончена не закончена
+    var _statusGame; // флаг закончена не закончена true закончена false продолжается
     var _history = [];
     var _parameters = Parameters.getParameters();
+    var _timer = new Timer();
 
-    this.celll = _cellData;
+    //this.cellData = function (cellData) {
+    //    if (arguments.length)
+    //        _cellData = cellData;
+    //    else
+    //        return _cellData;
+    //},
+    //    this.history = function (history) {
+    //        if (arguments.length)
+    //            _history = history;
+    //        else
+    //            return _history;
+    //    },
+
+
     // создание кнопки отмены
     this.createButtons = function () {
         var _this = this;
@@ -429,14 +454,6 @@ var Game = function () {
                 style: 'display:none'
             }).append(img)
         $('.cancelActions-area').html(button);
-
-        var savebutton = $('<buttons/>',
-            {
-                class: 'save-button btn btn-outline-primary btn-sm',
-                click: this.saveGame,
-                text: 'Сохранить игру'
-            })
-        $('.save-area').html(savebutton);
 
         var loadbutton = $('<buttons/>',
             {
@@ -456,9 +473,8 @@ var Game = function () {
 
     },
 
-    //добавить ход в историю
-    this.setHistoryItem = function (row, col, typeClick) {
-
+        //добавить ход в историю
+        this.setHistoryItem = function (row, col, typeClick) {
             var keyAction;
             var valueAction;
 
@@ -488,23 +504,28 @@ var Game = function () {
     this.initGame = function (canvas, context) {
         this.createButtons();
 
-        //   //читаем параметры 
-        var parameters = Parameters.getParameters();
+        //читаем параметры 
+        //var parameters = Parameters.getParameters();
         //  //формируем поле 
-        var gameArea = new GameArea(parameters);
-        //// рисуем поле
-
-        _cellData = gameArea.drawArea(canvas, context);
-        var _this = this;
+        var gameInfo = JSON.parse(localStorage.getItem('GameInfo'));
+        var gameArea = new GameArea(_parameters);
+        var _this;
+        if (gameInfo) {
+            _cellData = gameArea.GameLoad(gameInfo.cellData, context);
+            gameInfo.cellData = _cellData
+            _this = gameInfo;
+        }
+        else {
+            _cellData = gameArea.drawArea(canvas, context);
+            var _this = this;
+        }
         canvas.addEventListener('mousedown', function (e) {
             gameArea.clickArea(e, _cellData, context, _this)
         }, false);
 
-        canvas.addEventListener('mouseup', function (e) {
-            gameArea.clickArea(e, _cellData, context)
-        }, false);
-
-
+        //canvas.addEventListener('mouseup', function (e) {
+        //    gameArea.clickArea(e, _cellData, context)
+        //}, false);
     }
     //отмена хода
     this.cancellAction = function () {
@@ -516,9 +537,9 @@ var Game = function () {
         var value = historyCell.valueAction;
 
         if (actions === 'openCell')
-            cell.openCell(!value)
+            cell.openCell = !value;
         else
-            cell.suggestMine(!value)
+            cell.suggestMine = !value;
         _cellData[historyCell.row][historyCell.col] = cell;
         var canvas = document.querySelector('canvas')
         var context = canvas.getContext('2d');
@@ -527,10 +548,7 @@ var Game = function () {
     }
 
     setGameInfo = function () {
-        var userData = JSON.parse(localStorage.getItem('UserInfo'));
-        _user = userData.login;
         var index_level = $("input[type='radio']:checked").val();
-
         switch (index_level) {
             case "0":
                 _level = 'Новичок';
@@ -545,16 +563,17 @@ var Game = function () {
                 var q_width = _parameters.q_width;
                 var q_height = _parameters.q_height;
                 var q_mine = _parameters.q_mine;
-                _level = 'Особый поле ' + q_width + 'x' + q_height + ' ' + q_mine+'мин';
+                _level = 'Особый поле ' + q_width + 'x' + q_height + ' ' + q_mine + 'мин';
                 break;
         }
         _timeGame = $('#timer').text();
     }
 
     this.startGame = function () {
+        // localStorage.removeItem('GameInfo');
         $('#mine').text(_parameters.q_mine);
-        start_timer();
-
+        _timer.start_timer();
+        _statusGame = false;
     }
 
     sendDataToTopAjax = function (sendObject) {
@@ -570,13 +589,14 @@ var Game = function () {
                     alert('что то пошло не так');
                 }
                 else {
-                    debugger;
+
                     var txt;
                     for (var i = 0; i < resp.length; i++) {
                         var item = resp[i];
                         txt += '<tr<td></td><td>' + (i + 1) + '</td><td>' + item.user + '</td><td>' + item.level + '</td><td>' + item.q_width + ' x ' + item.q_height + '</td><td>' + item.q_mine + '</td><td>' + item.timeGame + ' сек.</td></tr>';
                     }
                     $('#top').html(txt);
+                    $('table').show();
                 }
             },
             error: function (response) {
@@ -593,43 +613,99 @@ var Game = function () {
         setGameInfo();
 
         var sendObject = {
-            user: _user,
-            timeGame :_timeGame,
+            user: _parameters.login,
+            timeGame: _timeGame,
             level: _level,
-            q_width : _parameters.q_width,
-            q_height : _parameters.q_height,
-            q_mine : _parameters.q_mine
+            q_width: _parameters.q_width,
+            q_height: _parameters.q_height,
+            q_mine: _parameters.q_mine
         }
 
         sendDataToTopAjax(sendObject);
     }
 
     this.stopGame = function (caption) {
+        _statusGame = true;
         setGameInfo();
         $('.status_game').text(caption);
-        $('.user_game').text(_user);
+        $('.user_game').text(_parameters.login);
         $('.level_game').text(_level);
         $('.time_game').text(_timeGame);
         $('.cancellaction-button').hide();
-        $('#modal_rezult').modal('show');
-        stop_timer();
+        if (caption != '')
+            $('#modal_rezult').modal('show');
+        _timer.stop_timer();
+        localStorage.removeItem('GameInfo');
         sendDataToTop();
     }
-    this.saveGame = function () {
-        alert('save')
-    }
+
     this.loadGame = function () {
         alert('load')
     }
 
+    this.saveGame = function () {
+        var obj = {
+            timeGame: timer,
+            level: _level,
+            cellData: _cellData,
+            statusGame: _statusGame,
+            parameters: Parameters.getParameters()
+        }
+        localStorage.setItem('GameInfo', JSON.stringify(obj));
+    }
+
+    this.saveGameAjax = function (game) {
+        $.ajax({
+            type: "Post",
+            url: "./Data.asmx/setGameInfo",
+            data: "{inputsParam:'" + game + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                let resp = JSON.parse(data.d)
+                if (resp.HasError) {
+                    alert('что то пошло не так');
+                }
+                else {
+                    alert('Игра успешно сохранена!');
+                }
+            },
+            error: function (response) {
+                alert('Ошибка сервера :(');
+            }
+        });
+    }
+
+    this.getGameAjax = function (sendJSON) {
+        $.ajax({
+            type: "Post",
+            url: "./Data.asmx/getGameInfo",
+            data: "{inputsParam:'" + JSON.stringify(sendJSON) + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                let resp = JSON.parse(data.d)
+                if (resp != null){
+         
+                    localStorage.setItem('GameInfo', JSON.stringify(resp))
+                    $('#modal_load').modal('show');
+                }
+            },
+            error: function (response) {
+                alert('Ошибка сервера :(');
+            }
+        });
+    }
 
     this.newGame = function () {
         var canvas = document.querySelector('canvas')
         var context = canvas.getContext('2d')
-        var parameters = Parameters.getParameters();
-        var gameArea = new GameArea(parameters);
+        //var parameters = Parameters.getParameters();
+        var gameArea = new GameArea(_parameters);
         gameArea.drawArea(canvas, context);
     }
+
+
 }
 
 // формирование обьекта с параметрами игры 
@@ -641,17 +717,21 @@ var Parameters = (function () {
         var sendStr = $('#' + formCaption).serialize();
         var sendArr = sendStr.split('&');
         var obj = {};
-        sendArr.forEach((value, index, sendArr) => { //TO DO: IE
-            var elem = value.split('=');
+        for (var i = 0; i < sendArr.length; i++) {
+            var item = sendArr[i];
+            var elem = item.split('=');
             obj[elem[0]] = elem[1];
-        })
+        }
         return obj;
     }
 
     function createParameters() {
         var baseParam = getParametersForm('baseForm');
+        var userData = JSON.parse(localStorage.getItem('UserInfo'));
+        baseParam.login = userData ? userData.login : 'Нет данных';
         baseParam.cell_width = 20;
         baseParam.cell_height = 20;
+
 
         switch (baseParam.level) {
             case '0': // easy
@@ -696,81 +776,78 @@ var Parameters = (function () {
     };
 })();
 // класс ячейка
-var Cell = function (x, y, cellWidth, cellHeight, suggestMine, suggestEmpty, color) {
-    var _x = x;
-    var _y = y;
+var Cell = function (x, y, cellWidth, cellHeight, mine, suggestMine, suggestEmpty, countOfNeighboringMinedCells, color) {
     var _cellWidth = cellWidth;
     var _cellHeight = cellHeight;
-    var _mine = false;//мина.не мина
-    var _suggestMine = suggestMine; //предположение мина.не мина
-    var _countOfNeighboringMinedCells = 0; // соседние ячейки(цифра)
-    var _open = false; // уже открыта 
     var _color = color;
+    this.x = x;
+    this.y = y;
+    this.mine = mine;//мина.не мина
+    this.suggestMine = suggestMine; //предположение мина.не мина
+    this.countOfNeighboringMinedCells = countOfNeighboringMinedCells; // соседние ячейки(цифра)
+    this.openCell = suggestEmpty; // уже открыта
 
+    //this.x = function (x) {
+    //    if (arguments.length)
+    //        _x = x;
+    //    else
+    //        return _x;
+    //},
 
-    this.x = function (x) {
-        if (arguments.length)
-            _x = x;
-        else
-            return _x;
-    },
+    //this.y = function (y) {
+    //    if (arguments.length)
+    //        _y = y;
+    //    else
+    //        return _y;
+    //},
 
-        this.y = function (y) {
-            if (arguments.length)
-                _y = y;
-            else
-                return _y;
-        },
+    //this.mine = function (mine) {
+    //    if (arguments.length)
+    //        _mine = mine;
+    //    else
+    //        return _mine;
+    //},
 
-        this.mine = function (mine) {
-            if (arguments.length)
-                _mine = mine;
-            else
-                return _mine;
-        },
+    //this.countOfNeighboringMinedCells = function (countOfNeighboringMinedCells) {
+    //    if (arguments.length)
+    //        _countOfNeighboringMinedCells = countOfNeighboringMinedCells;
+    //    else
+    //        return _countOfNeighboringMinedCells;
+    //},
+    //this.openCell = function (open) {
+    //    if (arguments.length)
+    //        _open = open;
+    //    else
+    //        return _open;
+    //},
+    //this.suggestMine = function (suggestMine) {
+    //    if (arguments.length)
+    //        _suggestMine = suggestMine;
+    //    else
+    //        return _suggestMine;
+    //},
 
-        this.countOfNeighboringMinedCells = function (countOfNeighboringMinedCells) {
-            if (arguments.length)
-                _countOfNeighboringMinedCells = countOfNeighboringMinedCells;
-            else
-                return _countOfNeighboringMinedCells;
-        },
-        this.openCell = function (open) {
-            if (arguments.length)
-                _open = open;
-            else
-                return _open;
-        },
-        this.suggestMine = function (suggestMine) {
-            if (arguments.length)
-                _suggestMine = suggestMine;
-            else
-                return _suggestMine;
-        },
-
-        this.redraw = function (context) {
-            context.clearRect(_x, _y, _cellWidth, _cellHeight);
-            context.strokeStyle = '#000';
-            context.lineWidth = 1;
-            context.fillStyle = _color.replace('%23', '#');
-            context.fillRect(_x, _y, _cellHeight, _cellWidth);
-            context.strokeRect(_x, _y, _cellHeight, _cellWidth);
-
-        }
+    this.redraw = function (context) {
+        context.clearRect(this._x, this._y, _cellWidth, _cellHeight);
+        context.strokeStyle = '#000';
+        context.lineWidth = 1;
+        context.fillStyle = _color.replace('%23', '#');
+        context.fillRect(this.x, this.y, _cellHeight, _cellWidth);
+        context.strokeRect(this.x, this.y, _cellHeight, _cellWidth);
+    }
 
     //отрисовать пустую закрытую клетку
     this.drawCloseEmpty = function (context) {
         context.strokeStyle = '#000';
         context.lineWidth = 1;
         context.fillStyle = _color.replace('%23', '#');
-        context.fillRect(_x, _y, _x + _cellHeight, _y + _cellWidth);
-        context.strokeRect(_x, _y, _x + _cellHeight, _y + _cellWidth);
+        context.fillRect(this.x, this.y, this.x + _cellHeight, this.y + _cellWidth);
+        context.strokeRect(this.x, this.y, this.x + _cellHeight, this.y + _cellWidth);
     }
-
 
     this.drawCountOfNeighboringMinedCells = function (context, x_pos, y_pos) {
         var img = new Image();
-        switch (_countOfNeighboringMinedCells) {
+        switch (this.countOfNeighboringMinedCells) {
             case -1:
                 this.redraw(context);
                 img.src = './images/mine.png';
@@ -780,23 +857,23 @@ var Cell = function (x, y, cellWidth, cellHeight, suggestMine, suggestEmpty, col
                 context.strokeStyle = '#000';
                 context.lineWidth = 1;
                 context.fillStyle = '#fff';
-                context.fillRect(_x, _y, _cellHeight, _cellWidth);
-                context.strokeRect(_x, _y, _cellHeight, _cellWidth);
+                context.fillRect(this.x, this.y, _cellHeight, _cellWidth);
+                context.strokeRect(this.x, this.y, _cellHeight, _cellWidth);
                 break;
             default:
                 this.redraw(context);
-                img.src = './images/' + _countOfNeighboringMinedCells + '.png';
+                img.src = './images/' + this.countOfNeighboringMinedCells + '.png';
                 break;
         }
 
-        context.drawImage(img, _x, _y, _cellWidth, _cellHeight);
+        context.drawImage(img, this.x, this.y, _cellWidth, _cellHeight);
     }
 
     this.drawFlags = function (context, x_pos, y_pos) {
         var img = new Image();
         img.src = './images/flag.png';
         this.redraw(context);
-        context.drawImage(img, _x, _y, _cellWidth, _cellHeight);
+        context.drawImage(img, this.x, this.y, _cellWidth, _cellHeight);
     }
 }
 
@@ -805,9 +882,15 @@ var Cell = function (x, y, cellWidth, cellHeight, suggestMine, suggestEmpty, col
 var GameArea = function (parameters) {
     var _parameters = parameters;
     var _firstClick = true;
+
+    //this.firstClick = function (firstClick) {
+    //    if (arguments.length)
+    //        _firstClick = firstClick;
+    //    else
+    //        return _firstClick;
+    //},
     //нарисовать пустое поле 
     this.drawArea = function (canvas, context) {
-
         // Представление всех ячеек
         var cells = []
         var canvasWidth = _parameters.q_width * _parameters.cell_width;
@@ -822,7 +905,7 @@ var GameArea = function (parameters) {
             cells[i] = [];
             var j = 0;
             for (var x = 0; x < canvasWidth; x += cellWidth) {
-                var cell = new Cell(x, y, _parameters.cell_width, _parameters.cell_height, false, false, _parameters.cl_cellColor)
+                var cell = new Cell(x, y, _parameters.cell_width, _parameters.cell_height, false, false, false, 0, _parameters.cl_cellColor)
                 cell.drawCloseEmpty(context);
                 cells[i][j] = cell;
                 j++;
@@ -877,10 +960,52 @@ var GameArea = function (parameters) {
         else return 0;
     }
 
+    GameOver = function (cellData, context) {
+        for (var row = 0; row < cellData.length; row++)
+            for (var col = 0; col < cellData[row].length; col++) {
+                var cell = cellData[row][col];
+                cell.drawCountOfNeighboringMinedCells(context, row, col);
+            }
+    }
+
+
+    this.GameLoad = function (cellData, context) {
+        var cells = [];
+        var _parameters = Parameters.getParameters();
+        var canvas = document.querySelector('canvas')
+        var canvasWidth = _parameters.q_width * _parameters.cell_width;
+        var canvasHeight = _parameters.q_height * _parameters.cell_height;
+        canvas.width = canvasWidth
+        canvas.height = canvasHeight
+        var cellWidth = _parameters.cell_width
+        var cellHeight = _parameters.cell_height
+
+        var i = 0;
+        for (var y = 0; y < canvasHeight; y += cellHeight) {
+            cells[i] = [];
+            var j = 0;
+            for (var x = 0; x < canvasWidth; x += cellWidth) {
+                var cell = cellData[i][j];
+                var _cell = new Cell(cell.x, cell.y, _parameters.cell_width, _parameters.cell_height, cell.mine, cell.suggestMine, cell.openCell, cell.countOfNeighboringMinedCells, _parameters.cl_cellColor)
+                if (cell.openCell)
+                    _cell.drawCountOfNeighboringMinedCells(context, i, j);
+                else if (cell.suggestMine)
+                    _cell.drawFlags(context, i, j);
+                else
+                    _cell.drawCloseEmpty(context);
+                cells[i][j] = _cell;
+                j++;
+            }
+            i++;
+        }
+        return cells;
+
+    }
+
 
     this.clickArea = function (e, cellData, context, game) {
         var parameters = Parameters.getParameters();
-        var logicsGame = new LogicsGame(cellData, context, parameters.q_mine);
+        var logicsGame = new LogicsGame(cellData, parameters.q_mine);
         var coords = getCellCoordsInArray(e);
         var status = true; //статус игры если true - все норм false - жахнулись на мине
         if (_firstClick) {
@@ -893,13 +1018,23 @@ var GameArea = function (parameters) {
             else if (typeClick(e) > 0)
                 cell.drawFlags(context, coords.row, coords.col);
             game.startGame();
-
+            game.saveGame(cellData);
         }
         else {
             status = logicsGame.checkCell(coords.row, coords.col, typeClick(e));
             game.setHistoryItem(coords.row, coords.col, typeClick(e));
             $('.cancellaction-button').show();
-            if (status.hasFinish && status.gameOver) {
+            var cell = cellData[coords.row][coords.col];
+            if (status.openCell) {
+                cell.openCell = true;
+                cell.drawCountOfNeighboringMinedCells(context, coords.row, coords.col);
+            }
+            else if (status.suggestMine) {
+                cell.suggestMine = true;
+                cell.drawFlags(context, coords.row, coords.col);
+            }
+            else if (status.hasFinish && status.gameOver) {
+                GameOver(cellData, context);
                 game.stopGame('Вы проиграли');
                 return;
                 //проиграли
@@ -909,16 +1044,15 @@ var GameArea = function (parameters) {
                 return;
                 //победили
             }
-
+            game.saveGame();
         }
 
     }
 }
 ///
 
-var LogicsGame = function (cellData, context, q_mine) {
+var LogicsGame = function (cellData, q_mine) {
     var _cellData = cellData;
-    var _context = context;
     var _countCell = cellData.length * cellData[0].length;
     var _q_mine = q_mine;
 
@@ -927,7 +1061,7 @@ var LogicsGame = function (cellData, context, q_mine) {
         for (var row = 0; row < _cellData.length; row++)
             for (var col = 0; col < _cellData[row].length; col++) {
                 var cell = _cellData[row][col];
-                if (cell.openCell())
+                if (cell.openCell)
                     countOpenCell++;
             }
         return countOpenCell;
@@ -937,21 +1071,24 @@ var LogicsGame = function (cellData, context, q_mine) {
         var cell = _cellData[row][col];
         var rObj = {
             hasFinish: true,
-            gameOver: true
+            gameOver: true,
+            openCell: false,
+            suggestMine: false
         };
 
-        if (cell.mine() && (typeClick < 0)) {
-            GameOver()
+        if (cell.mine && (typeClick < 0)) {
             return rObj;
         }
         else {
             if (typeClick < 0) {
-                cell.openCell(true);
-                cell.drawCountOfNeighboringMinedCells(_context, row, col);
+                return rObj = {
+                    openCell: true
+                }
             }
             else if (typeClick > 0) {
-                cell.suggestMine(true);
-                cell.drawFlags(context, row, col);
+                return rObj = {
+                    suggestMine: true
+                }
             }
             if (chekfinished()) {
                 return rObj = {
@@ -967,13 +1104,6 @@ var LogicsGame = function (cellData, context, q_mine) {
         }
     }
 
-    GameOver = function () {
-        for (var row = 0; row < _cellData.length; row++)
-            for (var col = 0; col < _cellData[row].length; col++) {
-                var cell = _cellData[row][col];
-                cell.drawCountOfNeighboringMinedCells(_context, row, col);
-            }
-    }
     chekfinished = function () {
         var countOpenCell = getOpenCell();
         if (countOpenCell == (_countCell - _q_mine))// если все ячейки без мин открыты то заканчиваем игру

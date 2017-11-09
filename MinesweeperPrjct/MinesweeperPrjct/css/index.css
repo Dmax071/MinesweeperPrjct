@@ -1,13 +1,5 @@
-﻿.header_node_block__note {
-    color: #fff;
-    line-height: 1.5rem;
-    font-weight: 300;
-    font-size: 1rem;
-}
+﻿/*--header--*/
 
-.navbar_block__button {
-    margin-top: 1rem;
-}
 
 header {
     background: #004c8f;
@@ -21,14 +13,6 @@ nav.header_container__navbar_block {
     text-align: center;
     box-shadow: 0 4px 3px rgba(0,33,59,.1);
 }
-
-    nav.header_container__navbar_block.stickytop {
-        z-index: 999;
-        position: fixed;
-        height: 120px;
-        top: 0;
-        width: 100%;
-    }
 
 .logo_container__text_up {
     margin-top: .25rem;
@@ -52,19 +36,6 @@ nav.header_container__navbar_block {
     height: 80px;
 }
 
-.navbar_block__collapse_menu {
-    margin-left: 3.6rem;
-    line-height: 1.5;
-    color: #323232;
-    font-size: 1.25rem;
-}
-
-
-.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
-    color: #004c8f;
-}
-
-/*/////костыль для кнопки войти*/
 .navbar-right {
     margin-left: 26rem;
     margin-top: -4rem;
@@ -92,49 +63,28 @@ nav.header_container__navbar_block {
 }
 
 .header-login {
-margin-left:.5rem
+    margin-left: .5rem
 }
+
 .btn-secondary {
     border-color: #fff
 }
 /*footer*/
-.footer_nav {
+/*.footer_nav {
     background-color: #183650;
-}
+}*/
 
 .footer_nav__copyRight {
     color: #FFF;
     height: 5rem;
 }
 
-footer {
+.footer {
     background-color: #183650;
     margin-top: 2rem
 }
 
-.footer_container {
-    margin-top: 2rem;
-}
-
-.footer_column {
-    text-align: left;
-}
-
-.footer_link {
-    color: #FFFFFF;
-    text-decoration: none;
-}
-
-    .footer_link:hover {
-        color: #dbdbdb;
-        text-decoration: none;
-    }
-
-div.footer_link {
-    font-size: .75rem;
-}
-
-
+/*body*/
 html, body {
     height: 84.65%;
     margin: 0;
@@ -145,19 +95,10 @@ main {
     min-height: 100%;
 }
 
-.footer_content {
-    height: 50px;
-}
-/*body*/
-
-/*.body_container {
-        margin-top: 1rem;
-    }*/
-
-.border_block {
+/*.border_block {
     border: 1px solid #ddd;
     margin: 0.5rem;
-}
+}*/
 
 .border_row {
     border: 1px solid #ddd;
@@ -179,11 +120,49 @@ main {
     border-radius: .25rem;
 }
 
+.right_input_block {
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.header-img {
+    width: 2rem;
+}
+
+.clock_img {
+    width: 2.5rem;
+}
+
+#timer {
+    text-align: center;
+    width: 4rem;
+}
+
+.general_area {
+    height: 690px;
+}
+
+.mine_img {
+    width: 4rem;
+}
+
 .cancellaction-button {
     margin-left: 1rem;
-    margin-top: -0.5rem;
+}
+
+#mine {
+    text-align: center;
+    width: 3rem
+}
+
+.tab-content {
+    margin-top: 1rem;
+}
+
+.status_game {
+    text-align: center;
 }
 
 th, td {
-    text-align:center;
+    text-align: center;
 }
