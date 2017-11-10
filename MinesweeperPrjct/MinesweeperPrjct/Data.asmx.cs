@@ -380,11 +380,15 @@ namespace MinesweeperPrjct
                     returns = _gameData.Tables["GamesTop"];
                 }
             }
-
-            DataView view = new DataView(_gameData.Tables["GamesTop"]);
-            view.Sort = "q_width ASC, q_mine ASC, q_height ASC, timeGame ASC";
-            returns = view.ToTable().AsEnumerable().Take(10).CopyToDataTable();
-
+            try
+            {
+                DataView view = new DataView(_gameData.Tables["GamesTop"]);
+                view.Sort = "q_width ASC, q_mine ASC, q_height ASC, timeGame ASC";
+                returns = view.ToTable().AsEnumerable().Take(10).CopyToDataTable();
+            }
+            catch {
+                return string.Empty;
+            }
             return _tools.TableToJson(returns);
         }
 

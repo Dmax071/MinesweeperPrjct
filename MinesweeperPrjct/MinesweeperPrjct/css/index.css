@@ -166,3 +166,9 @@ main {
 th, td {
     text-align: center;
 }
+
+.gray {
+    color: #666666;
+    filter: grayScale(100%);
+    pointer-events: none;
+}

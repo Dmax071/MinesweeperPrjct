@@ -59,6 +59,8 @@
 
     var user = new UserData();
     user.startUserData();
+    var game = new Game();
+    game.topInfo();
 
     $('#input-user').on('click', function (e) {
         user.LogOut();
@@ -90,6 +92,17 @@
         game.saveGameAjax(localStorage.getItem('GameInfo'));
         game.stopGame('');
         localStorage.removeItem('GameInfo');
+        game.setNonActiveGame();
+    })
+    $('.cancel_save_in_button').on('click', function (e) {
+        localStorage.removeItem('GameInfo');
+        var canvasObj = CanvasClearObject.getCanvasObj();
+        var game = new Game();
+        game.initGame(canvasObj.canvas, canvasObj.context);
+        game.setNonActiveGame();
+        setValueToForm();
+
+
     })
 
     $('.cancel_save_in_button').on('click', function (e) {
@@ -140,6 +153,7 @@ var UserData = function () {
                 login: login,
                 password: pasw
             }
+            var game = new Game();
             $.ajax({
                 type: "Post",
                 url: "./Data.asmx/setPlayerInGame",
@@ -154,14 +168,13 @@ var UserData = function () {
                     else {
                         localStorage.setItem('UserInfo', JSON.stringify(sendJSON));
                         setValueToForm();
+                        game.setActiveGame();
                     }
                 },
                 error: function (response) {
                     alert('Ошибка сервера :(');
                 }
             });
-
-            var game = new Game();
             game.getGameAjax(sendJSON);
 
         }
@@ -171,18 +184,19 @@ var UserData = function () {
     }
 
     this.LogOut = function () {
-
+        var game = new Game();
         localStorage.removeItem('UserInfo');
-        localStorage.removeItem('GameInfo');
+        //localStorage.removeItem('GameInfo');
         var _gameInfo = JSON.parse(localStorage.getItem('GameInfo'));
         if (_gameInfo)
             if (!_gameInfo.statusGame)
                 $('#modal_save').modal('show');
-        var canvasObj = CanvasClearObject.getCanvasObj();
-     
-        var game = new Game();
-        game.initGame(canvasObj.canvas, canvasObj.context);
-        setValueToForm(); //TO DO
+            else {
+                localStorage.removeItem('GameInfo');
+                var canvasObj = CanvasClearObject.getCanvasObj();
+                game.initGame(canvasObj.canvas, canvasObj.context);
+            }
+        setValueToForm()
     }
 
     this.clearFields = function () {
@@ -190,23 +204,25 @@ var UserData = function () {
         $("input[name = password]").val('');
     }
 
+
+
     setValueToForm = function () {
         var _userData = JSON.parse(localStorage.getItem('UserInfo'));
+        var game = new Game();
         if (!_userData) {
             $('#no-input-user').show();
             $('#input-user').hide();
-            this.clearFields();
+            game.setNonActiveGame();
+            //this.clearFields();
         }
         else {
             $('#login').text(_userData.login);
             $('#no-input-user').hide();
             $('#input-user').show();
+            game.setActiveGame();
 
         }
     }
-
-
-
 }
 
 
@@ -233,7 +249,6 @@ var ColorTheme = function () {
         $('canvas').css({ 'border': '2px solid', 'border-color': ColorTheme.cl_borderColor });
         var game = new Game();
         game.initGame(canvasObj.canvas, canvasObj.context);
-        game.topInfo();
     }
 
     this.setStartTheme = function () {
@@ -269,6 +284,10 @@ var ColorTheme = function () {
 var CanvasClearObject = (function () {
     var canvasObject;
     function createCanvasObj() {
+        var canvas = document.querySelector('canvas')
+        //if ($(canvas).hasClass('gray')) 
+        //    $('.canvas_elem').html('<canvas class="gray"></canvas>');
+        //else
         $('.canvas_elem').html('<canvas></canvas>');
         var canvas = document.querySelector('canvas')
         var context = canvas.getContext('2d')
@@ -417,61 +436,98 @@ var CellGenerator = function (cellData, parameters) {
 
 //класс Игра
 var Game = function () {
-    var _timeGame; // время игры
-    var _level; // сложность
+    var _timeGame = $('#timer').text();
+    var _level = $("input[type='radio']:checked").val();
     var _cellData; // массив ячеек игры
     var _statusGame; // флаг закончена не закончена true закончена false продолжается
     var _history = [];
     var _parameters = Parameters.getParameters();
     var _timer = new Timer();
+    var _mine = _parameters.q_mine;
+    var _loadGame = false;
+    var _firstClick = true;
 
-    //this.cellData = function (cellData) {
-    //    if (arguments.length)
-    //        _cellData = cellData;
-    //    else
-    //        return _cellData;
-    //},
-    //    this.history = function (history) {
-    //        if (arguments.length)
-    //            _history = history;
-    //        else
-    //            return _history;
-    //    },
-
-
-    // создание кнопки отмены
-    this.createButtons = function () {
-        var _this = this;
-        var img = $('<img/>', {
-            class: 'img-fluid',
-            src: './images/arrow.png',
-            style: 'width:2.5rem',
-        });
-        var button = $('<a/>',
-            {
-                class: 'cancellaction-button',
-                click: this.cancellAction,
-                style: 'display:none'
-            }).append(img)
-        $('.cancelActions-area').html(button);
-
-        var loadbutton = $('<buttons/>',
-            {
-                class: 'save-button btn btn-outline-primary btn-sm',
-                click: this.loadGame,
-                text: 'Загрузить игру'
-            })
-        $('.load-area').html(loadbutton);
-
-        var newGamebutton = $('<buttons/>',
-            {
-                class: 'save-button btn btn-outline-primary btn-sm',
-                click: _this.newGame,
-                text: 'Начать заново'
-            })
-        $('.new-area').html(newGamebutton);
-
+    this.firstClick = function (firstClick) {
+        if (arguments.length)
+            _firstClick = firstClick;
+        else
+            return _firstClick;
     },
+        this.parameters = function (parameters) {
+        if (arguments.length)
+            _parameters = parameters;
+        else
+            return _parameters;
+    }
+
+    this.loadGameSt = function (loadGameSt) {
+        if (arguments.length)
+            _loadGame = loadGameSt;
+        else
+            return _loadGame;
+    },
+        this.mine = function (mine) {
+            if (arguments.length) {
+                _mine = mine;
+                if (mine >= 0)
+                    $('#mine').text(mine)
+            }
+            else
+                return _mine;
+        },
+        this.timeGame = function (timeGame) {
+            if (arguments.length) { 
+            _timeGame = timeGame;
+            $('#timer').text(timeGame)
+        }
+            else
+                return _timeGame;
+        },
+        this.level = function (level) {
+            if (arguments.length) {
+                _level = level;
+                var $radios = $("input[type='radio']");
+                $radios.filter('[value='+level+']').prop('checked', true);
+            }
+            else
+                return _level;
+        },
+
+        // создание кнопки отмены
+        this.createButtons = function () {
+            var _this = this;
+            var img = $('<img/>', {
+                class: 'img-fluid',
+                src: './images/arrow.png',
+                style: 'width:2.5rem',
+            });
+            var button = $('<a/>',
+                {
+                    class: 'cancellaction-button',
+                    click: this.cancellAction,
+                    style: 'display:none'
+                }).append(img)
+            $('.cancelActions-area').html(button);
+
+
+            var newGamebutton = $('<buttons/>',
+                {
+                    class: 'new-button btn btn-outline-primary btn-sm',
+                    click: _this.newGame,
+                    text: 'Начать новую игру',
+                })
+            $('.new-area').html(newGamebutton);
+
+            var saveGamebutton = $('<buttons/>',
+                {
+                    class: 'save-button btn btn-outline-primary btn-sm',
+                    click: _this.saveGame_,
+                    text: 'Сохранить игру',
+                    style: 'display:none'
+                })
+            $('.save-area').html(saveGamebutton);
+
+        },
 
         //добавить ход в историю
         this.setHistoryItem = function (row, col, typeClick) {
@@ -503,29 +559,27 @@ var Game = function () {
 
     this.initGame = function (canvas, context) {
         this.createButtons();
-
-        //читаем параметры 
-        //var parameters = Parameters.getParameters();
-        //  //формируем поле 
         var gameInfo = JSON.parse(localStorage.getItem('GameInfo'));
         var gameArea = new GameArea(_parameters);
         var _this;
         if (gameInfo) {
+            this.timeGame(gameInfo.timeGame);
+            this.cellData = _cellData
+            this.loadGameSt(true);
+            this.mine(gameInfo.mine);
+            this.parameters(gameInfo.parameters);
+            this.level(gameInfo.level);
             _cellData = gameArea.GameLoad(gameInfo.cellData, context);
-            gameInfo.cellData = _cellData
-            _this = gameInfo;
         }
         else {
             _cellData = gameArea.drawArea(canvas, context);
-            var _this = this;
+
         }
+        var _this = this;
         canvas.addEventListener('mousedown', function (e) {
             gameArea.clickArea(e, _cellData, context, _this)
         }, false);
 
-        //canvas.addEventListener('mouseup', function (e) {
-        //    gameArea.clickArea(e, _cellData, context)
-        //}, false);
     }
     //отмена хода
     this.cancellAction = function () {
@@ -569,13 +623,6 @@ var Game = function () {
         _timeGame = $('#timer').text();
     }
 
-    this.startGame = function () {
-        // localStorage.removeItem('GameInfo');
-        $('#mine').text(_parameters.q_mine);
-        _timer.start_timer();
-        _statusGame = false;
-    }
-
     sendDataToTopAjax = function (sendObject) {
         $.ajax({
             type: "Post",
@@ -584,19 +631,21 @@ var Game = function () {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                let resp = JSON.parse(data.d)
-                if (resp.HasError) {
-                    alert('что то пошло не так');
-                }
-                else {
-
-                    var txt;
-                    for (var i = 0; i < resp.length; i++) {
-                        var item = resp[i];
-                        txt += '<tr<td></td><td>' + (i + 1) + '</td><td>' + item.user + '</td><td>' + item.level + '</td><td>' + item.q_width + ' x ' + item.q_height + '</td><td>' + item.q_mine + '</td><td>' + item.timeGame + ' сек.</td></tr>';
+                if (data.d != '') {
+                    let resp = JSON.parse(data.d)
+                    if (resp.HasError) {
+                        alert('что то пошло не так');
                     }
-                    $('#top').html(txt);
-                    $('table').show();
+                    else {
+
+                        var txt;
+                        for (var i = 0; i < resp.length; i++) {
+                            var item = resp[i];
+                            txt += '<tr<td></td><td>' + (i + 1) + '</td><td>' + item.user + '</td><td>' + item.level + '</td><td>' + item.q_width + ' x ' + item.q_height + '</td><td>' + item.q_mine + '</td><td>' + item.timeGame + ' сек.</td></tr>';
+                        }
+                        $('#top').html(txt);
+                        $('table').show();
+                    }
                 }
             },
             error: function (response) {
@@ -624,8 +673,18 @@ var Game = function () {
         sendDataToTopAjax(sendObject);
     }
 
-    this.stopGame = function (caption) {
+    this.setActiveTools = function () {
+        $('.nav-link ').removeClass('disabled');
+        $("input[type='radio']").attr('disabled', false);
+    }
+
+    this.setNonActiveTools = function () {
+        $('.nav-link ').addClass('disabled');
+        $("input[type='radio']").attr('disabled', true);
+    }
+
         _statusGame = true;
+    this.stopGame = function (caption) {
         setGameInfo();
         $('.status_game').text(caption);
         $('.user_game').text(_parameters.login);
@@ -637,22 +696,74 @@ var Game = function () {
         _timer.stop_timer();
         localStorage.removeItem('GameInfo');
         sendDataToTop();
+        this.setActiveTools();
+        this.setNoNActiveButtons();
     }
 
-    this.loadGame = function () {
-        alert('load')
+    this.startGame = function () {
+        //localStorage.removeItem('GameInfo');
+        $('#mine').text(_parameters.q_mine);
+        _timer.start_timer();
+        _statusGame = false;
+        //this.setActiveGame();
+        this.setNonActiveTools()
+        this.setActiveButtons();
+    }
+
+
+    this.setActiveButtons = function () {
+        $('.save-button').show();
+
+    }
+    this.setNoNActiveButtons = function () {
+        $('.save-button').hide();
+    }
+
+    this.setActiveGame = function () {
+        $('canvas').removeClass('gray');
+        $('.tools-area').removeClass('gray');
+    }
+    this.setNonActiveGame = function () {
+        $('canvas').addClass('gray');
+        $('.tools-area').addClass('gray');
+    }
+
+    this.SetLoadGameParam = function () {
+        $('#timer').text(this.timeGame());
+        $('#mine').text(this.mine());
+        //TO DO level
     }
 
     this.saveGame = function () {
         var obj = {
-            timeGame: timer,
+            timeGame: _timeGame,
             level: _level,
             cellData: _cellData,
             statusGame: _statusGame,
-            parameters: Parameters.getParameters()
+            parameters: Parameters.getParameters(),
+            firstClick: _firstClick,
+            mine: _mine,
+            level: _level
         }
         localStorage.setItem('GameInfo', JSON.stringify(obj));
     }
+
+
+    this.loadGame = function () {
+        var game = new Game();
+        game.getGameAjax(sendJSON);
+    }
+
+    this.newGame = function () {
+        localStorage.removeItem('GameInfo');
+        location.reload();
+    }
+
+    this.saveGame_ = function () {
+        var game = new Game();
+        game.saveGameAjax(localStorage.getItem('GameInfo'));
+    }
+
 
     this.saveGameAjax = function (game) {
         $.ajax({
@@ -668,6 +779,8 @@ var Game = function () {
                 }
                 else {
                     alert('Игра успешно сохранена!');
+                    //To DO:если нажат выход то выйти если нет то продолжать
+                    //localStorage.removeItem('GameInfo');
                 }
             },
             error: function (response) {
@@ -685,8 +798,8 @@ var Game = function () {
             dataType: "json",
             success: function (data) {
                 let resp = JSON.parse(data.d)
-                if (resp != null){
-         
+                if (resp != null) {
+
                     localStorage.setItem('GameInfo', JSON.stringify(resp))
                     $('#modal_load').modal('show');
                 }
@@ -697,13 +810,7 @@ var Game = function () {
         });
     }
 
-    this.newGame = function () {
-        var canvas = document.querySelector('canvas')
-        var context = canvas.getContext('2d')
-        //var parameters = Parameters.getParameters();
-        var gameArea = new GameArea(_parameters);
-        gameArea.drawArea(canvas, context);
-    }
+
 
 
 }
@@ -847,13 +954,13 @@ var Cell = function (x, y, cellWidth, cellHeight, mine, suggestMine, suggestEmpt
 
     this.drawCountOfNeighboringMinedCells = function (context, x_pos, y_pos) {
         var img = new Image();
+        context.beginPath();
         switch (this.countOfNeighboringMinedCells) {
             case -1:
                 this.redraw(context);
-                img.src = './images/mine.png';
+                img = document.getElementById('img_mine')
                 break;
             case 0:
-                context.beginPath();
                 context.strokeStyle = '#000';
                 context.lineWidth = 1;
                 context.fillStyle = '#fff';
@@ -862,7 +969,7 @@ var Cell = function (x, y, cellWidth, cellHeight, mine, suggestMine, suggestEmpt
                 break;
             default:
                 this.redraw(context);
-                img.src = './images/' + this.countOfNeighboringMinedCells + '.png';
+                img = document.getElementById('img_' + this.countOfNeighboringMinedCells)
                 break;
         }
 
@@ -870,10 +977,8 @@ var Cell = function (x, y, cellWidth, cellHeight, mine, suggestMine, suggestEmpt
     }
 
     this.drawFlags = function (context, x_pos, y_pos) {
-        var img = new Image();
-        img.src = './images/flag.png';
         this.redraw(context);
-        context.drawImage(img, this.x, this.y, _cellWidth, _cellHeight);
+        context.drawImage(document.getElementById('flag'), this.x, this.y, _cellWidth, _cellHeight);
     }
 }
 
@@ -882,7 +987,6 @@ var Cell = function (x, y, cellWidth, cellHeight, mine, suggestMine, suggestEmpt
 var GameArea = function (parameters) {
     var _parameters = parameters;
     var _firstClick = true;
-
     //this.firstClick = function (firstClick) {
     //    if (arguments.length)
     //        _firstClick = firstClick;
@@ -999,6 +1103,20 @@ var GameArea = function (parameters) {
             i++;
         }
         return cells;
+    }
+
+
+    firstClick = function (e, cellData, context, game, coords) {
+        var cell = getCellinArray(cellData, coords.row, coords.col);
+        if (typeClick(e) < 0) {
+            cell.drawCountOfNeighboringMinedCells(context, coords.row, coords.col);
+            cell.openCell = true;
+        }
+        else if (typeClick(e) > 0) {
+            cell.drawFlags(context, coords.row, coords.col);
+            cell.suggestMine = true;
+
+        }
 
     }
 
@@ -1008,15 +1126,13 @@ var GameArea = function (parameters) {
         var logicsGame = new LogicsGame(cellData, parameters.q_mine);
         var coords = getCellCoordsInArray(e);
         var status = true; //статус игры если true - все норм false - жахнулись на мине
-        if (_firstClick) {
-            cellGenerator = new CellGenerator(cellData, _parameters); // TO DO singleTON
-            cellData = cellGenerator.generatedMinedArea(coords.row, coords.col);
-            _firstClick = false;
-            var cell = getCellinArray(cellData, coords.row, coords.col);
-            if (typeClick(e) < 0)
-                cell.drawCountOfNeighboringMinedCells(context, coords.row, coords.col);
-            else if (typeClick(e) > 0)
-                cell.drawFlags(context, coords.row, coords.col);
+        if (game.firstClick()) {
+            game.firstClick(false)
+            if (!game.loadGameSt()) {
+                cellGenerator = new CellGenerator(cellData, _parameters); // TO DO singleTON
+                cellData = cellGenerator.generatedMinedArea(coords.row, coords.col);
+            }
+            firstClick(e, cellData, context, game, coords);
             game.startGame();
             game.saveGame(cellData);
         }
@@ -1032,6 +1148,8 @@ var GameArea = function (parameters) {
             else if (status.suggestMine) {
                 cell.suggestMine = true;
                 cell.drawFlags(context, coords.row, coords.col);
+                var mine = game.mine();
+                game.mine(mine-1);
             }
             else if (status.hasFinish && status.gameOver) {
                 GameOver(cellData, context);
