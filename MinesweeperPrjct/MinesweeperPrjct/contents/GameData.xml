@@ -32,4 +32,22 @@
     <q_height>30</q_height>
     <q_mine>668</q_mine>
   </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Нет данных</user>
+    <level>Новичок</level>
+    <timeGame>1</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
+  <GamesTop>
+    <index>0</index>
+    <user>Test</user>
+    <level>Новичок</level>
+    <timeGame>6</timeGame>
+    <q_width>9</q_width>
+    <q_height>9</q_height>
+    <q_mine>10</q_mine>
+  </GamesTop>
 </NewDataSet>

@@ -226,7 +226,7 @@ var UserData = function () {
 }
 
 
-//параметры цветовыъ схем
+//параметры цветовых схем
 var ColorTheme = function () {
 
     getValueTheme = function () {
@@ -285,9 +285,9 @@ var CanvasClearObject = (function () {
     var canvasObject;
     function createCanvasObj() {
         var canvas = document.querySelector('canvas')
-        //if ($(canvas).hasClass('gray')) 
-        //    $('.canvas_elem').html('<canvas class="gray"></canvas>');
-        //else
+        if ($(canvas).hasClass('gray')) 
+            $('.canvas_elem').html('<canvas class="gray"></canvas>');
+        else
         $('.canvas_elem').html('<canvas></canvas>');
         var canvas = document.querySelector('canvas')
         var context = canvas.getContext('2d')
@@ -658,7 +658,7 @@ var Game = function () {
         sendDataToTopAjax(null);
     }
 
-    sendDataToTop = function () {
+    sendDataToTop = function (caption) {
         setGameInfo();
 
         var sendObject = {
@@ -669,7 +669,8 @@ var Game = function () {
             q_height: _parameters.q_height,
             q_mine: _parameters.q_mine
         }
-
+        debugger
+        if (caption.indexOf('Поздравляем') > -1)
         sendDataToTopAjax(sendObject);
     }
 
@@ -695,7 +696,7 @@ var Game = function () {
             $('#modal_rezult').modal('show');
         _timer.stop_timer();
         localStorage.removeItem('GameInfo');
-        sendDataToTop();
+        sendDataToTop(caption);
         this.setActiveTools();
         this.setNoNActiveButtons();
     }
